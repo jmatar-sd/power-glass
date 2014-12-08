@@ -1,24 +1,8 @@
-
-	$(document).ready($m = function(){
-		$('body').blurjs({
-			draggable: false,
-			overlay: '',
-			radius:1
-		});
-		$('.top-bar').blurjs({
+	$(document).ready(function(){
+		$('.blur').blurjs({
+			source: 'body',
 			draggable: true,
 			overlay: '',
-			radius: .5
+			radius: 22
 		});
-		$('.main-content').blurjs({
-			draggable: false,
-			overlay: '',
-			radius: .0
-		});
-		$('.footer').blurjs({
-			draggable: true,
-			overlay: '',
-			radius: .5
-		});
-		
 	});

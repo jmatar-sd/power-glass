@@ -1,22 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<title>Batty Project</title>
-	<script type='text/javascript' src='theme/js/lib/blur.js'></script>
 	<link rel="stylesheet" href="theme/styles/styles.css">
 	
 </head>
 <body>
-	<div class="circle"></div>
-	<script type="text/javascript">
-		$(document).ready(function(){
-			$('.circle').blurjs({
-				draggable: true,
-				overlay: 'rgba(255,255,255,0.1)',
-				radius:10
-			});
-		});
-	</script>
+	<div class="topBar">[ top- bar ]</div>
 	
+	
+	<div class="main-content">
+		<div class="sales-panel">[ sales-panel ] <div class="btn-group">
+			
+			<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" type="button">
+Primary
+<span class="caret"></span>
+</button>
+
+		</div></div>
+		<div class="tools-panel">[ tools-bar ]</div>
+	</div>
+
+	<div class="foot">
+		[ footer ]
+	</div>
+	
+	<!-- start import deamn scripts -->
+	<script type='text/javascript' src='http://code.jquery.com/jquery-1.7.1.js'></script>
+	<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js'></script>
+	<script type='text/javascript' src='theme/js/lib/blur.js'></script>
+	<script type='text/javascript' src='theme/js/lib/jquery.js'></script>
+	<script type='text/javascript' src='theme/js/scripts/scripts.js'></script>
 </body>
 </html>

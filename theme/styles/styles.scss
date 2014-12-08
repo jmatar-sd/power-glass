@@ -1,26 +1,60 @@
+@import "_patterns/_patterns.scss";
+@import "lib/semantic.css"
 $base-color:	rgba(189, 22, 22, .22);
+html{width:	100%; height: 100%;}
 body{
-margin:0;padding:0;
+	position: relative;
+	margin:0;padding:0;
 			color:#fff;
 			font-family:arial;
 			text-shadow:0 2px 2px #000;
 			width:	100%;
 			height:	100%;
 			background:top left no-repeat;
-	background-color:	$base-color;
+	background-color:	white;
 	background-image:url('../resources/images/background.jpg');
-}
-.top-bar{
-margin:0 auto;	
-			-webkit-box-shadow:0 2px 2px #000, 0 1px 0 #fff inset;
-			-moz-box-shadow:0 2px 2px #000, 0 1px 0 #fff inset;
-			box-shadow:0 2px 2px #000, 0 1px 0 #fff inset;
-			background-color:	lighten($base-color, .22);
+
+	.top-bar{
+		position:   fixed;
+		top:		22px;
+		left:		5.5%;
+		@include	glass-shadow;
+		@include	glass-color($base-color);
+		@include	border-radius(22px);
 			width:	89%;
 			height:	89px;
-			-webkit-border-radius: 22px;
-			-moz-border-radius: 22px;
-			border-radius: 22px;
 			cursor:move;
-			z-indes:	22;
+			z-indes:	100;
+}
+.main-content{
+		position:	 fixed;
+		top:		 133px;
+		bottom: 	 22px;
+		width:	 	 100%;
+		
+
+		background-color:	$base-color;
+		z-indes:	22;
+}
+.sales-panel{
+	position: absolute;
+	left: 	  0%;
+	top: 	  0;
+	width:	  60%;
+	height:   100%;
+}
+.tools-panel{
+	position: absolute;
+	right: 	  0%;
+	top: 	  0;
+	width:	  40%;
+	height:   100%;
+}
+.footer{
+	position:	 fixed;
+	bottom:		 0;
+	height:		 22px;
+	width: 		 89%;
+}
+
 }

@@ -1,8 +1,28 @@
-	
+
+
+	@mixin glass-shadow{
+				-webkit-box-shadow:0 2px 2px #000, 0 1px 0 #fff inset;
+			-moz-box-shadow:0 2px 2px #000, 0 1px 0 #fff inset;
+			box-shadow:0 2px 2px #000, 0 1px 0 #fff inset;
+	}
+	@mixin glass-color($color){
+			background-color:	lighten($color, .22);
+	}
+
+
+
+
+
+	@mixin	border-radius($value){
+			-webkit-border-radius: $value;
+			-moz-border-radius: $value;
+			border-radius: $value;
+	}
 	//not ready yet for use 
 	@mixin box-shadow($left, $top, $right, $bottom, $color, $style){
 		-webkit-box-shadow:0 2px 2px #000, 0 1px 0 #fff inset;
 	-moz-box-shadow:0 2px 2px #000, 0 1px 0 #fff inset;
 	box-shadow:0 2px 2px #000, 0 1px 0 #fff inset;
-	}
+	}	
+
 	
