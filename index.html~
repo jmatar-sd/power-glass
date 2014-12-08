@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Batty Project</title>
+	<script type='text/javascript' src='theme/js/lib/blur.js'></script>
+	<link rel="stylesheet" href="theme/styles/styles.css">
+	
+</head>
+<body>
+	<div class="circle"></div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('.circle').blurjs({
+				draggable: true,
+				overlay: 'rgba(255,255,255,0.1)',
+				radius:10
+			});
+		});
+	</script>
+	
+</body>
+</html>

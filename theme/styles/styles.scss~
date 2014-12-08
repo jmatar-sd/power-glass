@@ -1,0 +1,14 @@
+body{
+	background-color:	darken(rgba(200, 20, 20, .5), 20%);
+	background-image:url('../resources/images/background.jpg');
+}
+.circle{
+			width:255px;
+			height:255px;
+			
+			-webkit-border-radius:127px;
+			-moz-border-radius:127px;
+			border-radius:127px;
+			
+			cursor:move;
+}
