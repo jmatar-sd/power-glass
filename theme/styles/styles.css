@@ -55,7 +55,7 @@ body {
     -webkit-border-radius: 2.2em;
     -moz-border-radius: 2.2em;
     border-radius: 2.2em; }
-  body .sales-panel {
+  body .default-panel {
     position: absolute;
     right: 0%;
     top: 0;
@@ -73,7 +73,10 @@ body {
     left: 0%;
     top: 0;
     width: 40%;
-    height: 100%; }
+    height: 100%;
+    -webkit-border-radius: 2.2em 0 0 2.2em;
+    -moz-border-radius: 2.2em 0 0 2.2em;
+    border-radius: 2.2em 0 0 2.2em; }
   body .footer {
     position: fixed;
     bottom: 0;
