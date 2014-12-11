@@ -3,6 +3,6 @@
 			source: 'body',
 			draggable: true,
 			overlay: '',
-			radius: 22
+			radius: 89
 		});
 	});

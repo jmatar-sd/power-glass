@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Recipes with Angular.js - Listening on Route Changes to Implement a Login Mechanism</title>
+    <meta keywords="javascript, js, angular.js, angularjs, recipes with angular.js, recipes with angularjs, best practices, cookbook, tutorial, book">
+    <meta name="viewport" content="width=device-width">
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="../assets/application-64ae7a41d6f726f185cec00ea0549071.css">
+  </head>
+    <body ng-app="RecipesApp">
+
+        <div class="contain-to-grid">
+          <nav class="top-bar">
+            <ul class="title-area">
+              <li class="name">
+                <h1><a href="http://fdietz.github.io/recipes-with-angular-js">Recipes with Angular.js <img src="../assets/AngularJS-Shield-small-0395a23b65050a4d4cc0febd3bbb93f0.png" alt="" width="36" height="36"></a>  </h1>
+              </li>
+              <li class="toggle-topbar menu-icon"><a href="listening-on-route-changes-to-implement-a-login-mechanism.html#"><span>Menu</span></a></li>
+            </ul>
+
+            <section class="top-bar-section">
+              <ul class="left">
+                <li><a href="../toc.html">Table of Contents</a></li>
+                <li><a href="../about.html">About</a></li>
+              </ul>
+
+            </section>
+          </nav>
+        </div>
+
+      <div class="row">
+        <div class="large-12 columns">
+          <ul class="breadcrumbs">
+  <li><a href="http://fdietz.github.io/recipes-with-angular-js">Home</a></li>
+  <li><a href="../urls-routing-and-partials.1">urls-routing-and-partials</a></li>
+  <li class="current">Listening on Route Changes to Implement a Login Mechanism</li>
+</ul>
+
+<div class="recipe-actions">
+  
+</div>
+
+<h2>Listening on Route Changes to Implement a Login Mechanism</h2>
+
+<h3 id="problem">Problem</h3>
+
+<p>You wish to ensure that a user has to login before navigating to protected pages.</p>
+
+<h3 id="solution">Solution</h3>
+
+<p>Implement a listener on the <code>$routeChangeStart</code> event to track the next route navigation. Redirect to a login page if the user is not yet logged in.</p>
+
+<p>The most interesting part is the implementation of the route change listener:</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>var app = angular.module(&quot;MyApp&quot;, []).
+  config(function($routeProvider, $locationProvider) {
+    $routeProvider.
+      when(&quot;/persons&quot;,
+        { templateUrl: &quot;partials/index.html&quot; }).
+      when(&quot;/login&quot;,
+        { templateUrl: &quot;partials/login.html&quot;, controller: &quot;LoginCtrl&quot; }).
+      // event more routes here ...
+      otherwise( { redirectTo: &quot;/persons&quot; });
+  }).
+  run(function($rootScope, $location) {
+    $rootScope.$on( &quot;$routeChangeStart&quot;, function(event, next, current) {
+      if ($rootScope.loggedInUser == null) {
+        // no logged user, redirect to /login
+        if ( next.templateUrl === &quot;partials/login.html&quot;) {
+        } else {
+          $location.path(&quot;/login&quot;);
+        }
+      }
+    });
+  });</code></pre>
+</div>
+<p>Next we will define a login form to enter the username, skipping the password for the sake of simplicity:</p>
+<div>
+  <pre data-line=''><code class='language-markup'>&lt;form ng-submit=&quot;login()&quot;&gt;
+  &lt;label&gt;Username&lt;/label&gt;
+  &lt;input type=&quot;text&quot; ng-model=&quot;username&quot;&gt;
+  &lt;button&gt;Login&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+</div>
+<p>and finally the login controller, which sets the logged in user and redirects to the persons URL:</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>app.controller(&quot;LoginCtrl&quot;, function($scope, $location, $rootScope) {
+  $scope.login = function() {
+    $rootScope.loggedInUser = $scope.username;
+    $location.path(&quot;/persons&quot;);
+  };
+});</code></pre>
+</div>
+<p>You can find the complete example on <a href="https://github.com/fdietz/recipes-with-angular-js-examples/tree/master/chapter6/recipe4">github</a>.</p>
+
+<h3 id="discussion">Discussion</h3>
+
+<p>This is of course not a fully fledged login system so please don’t use it in any production system. But, it exemplifies how to generally handle access to specific areas of your web app. When you open the app in your browser you will be redirected to the login app in all cases. Only after you have entered a username can you access the other areas.</p>
+
+<p>The <code>run</code> method is defined in <a href="http://docs.angularjs.org/api/angular.Module">Module</a> and is a good place for such a route change listener since it runs only once on initialization after the injector is finished loading all the modules. We check the <code>loggedInUser</code> in the <code>$rootScope</code> and if it is not set we redirect the user to the login page. Note that in order to skip this behavior when already navigating to the login page, we have to explicitly check the next <code>templateUrl</code>.</p>
+
+<p>The login controller sets the <code>$rootScope</code> to the username and redirects to <code>/persons</code>. Generally, I try to avoid using the <code>$rootScope</code> since it basically is a kind of global state but in our case it fits nicely since there should be a current user globally available.</p>
+
+<div class="panel radius similar-pages">
+  <h4>Similar Recipes</h4>
+  <ul>
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <li>
+          <a href="client-side-routing-with-hashbang-urls.html">Client-Side Routing with Hashbang URLs</a>
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          <a href="listening-on-route-changes-to-implement-a-login-mechanism.html">Listening on Route Changes to Implement a Login Mechanism</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="using-regular-urls-with-the-html5-history-api.html">Using Regular URLs with the HTML5 History API</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="using-route-location-to-implement-a-navigation-menu.html">Using Route Location to Implement a Navigation Menu</a>
+        </li>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+
+      <footer class="row">
+        <div class="large-12 columns">
+          <hr>
+          <div class="row">
+            <div class="large-6 columns">
+              <p>
+                Maintained by <a href="http://fdietz.de">Frederik Dietz</a>
+              </p>
+            </div>
+
+            <div class="large-6 columns text-right">
+              <p>All content licensed with <a href="http://creativecommons.org/">Creative Commons</a></p>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      <script src="../assets/application-0baff5f0e43111ed2b7cbc8b8b523b9f.js"></script>
+      <script>
+        $(document).foundation();
+      </script>
+
+      <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-42557266-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+      </script>
+
+      <script type="text/javascript">
+        $(function() {
+          $('#search-query').lunrSearch({
+            indexUrl: '/recipes-with-angular-js/search.json',
+            results:  '#search-results',
+            entries:  '.entries',
+            template: '#search-results-template'
+          });
+        });
+      </script>
+    </body>
+</html>

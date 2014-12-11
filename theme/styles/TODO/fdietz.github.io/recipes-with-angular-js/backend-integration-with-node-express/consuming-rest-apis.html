@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Recipes with Angular.js - Consuming REST APIs</title>
+    <meta keywords="javascript, js, angular.js, angularjs, recipes with angular.js, recipes with angularjs, best practices, cookbook, tutorial, book">
+    <meta name="viewport" content="width=device-width">
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="../assets/application-64ae7a41d6f726f185cec00ea0549071.css">
+  </head>
+    <body ng-app="RecipesApp">
+
+        <div class="contain-to-grid">
+          <nav class="top-bar">
+            <ul class="title-area">
+              <li class="name">
+                <h1><a href="http://fdietz.github.io/recipes-with-angular-js">Recipes with Angular.js <img src="../assets/AngularJS-Shield-small-0395a23b65050a4d4cc0febd3bbb93f0.png" alt="" width="36" height="36"></a>  </h1>
+              </li>
+              <li class="toggle-topbar menu-icon"><a href="consuming-rest-apis.html#"><span>Menu</span></a></li>
+            </ul>
+
+            <section class="top-bar-section">
+              <ul class="left">
+                <li><a href="../toc.html">Table of Contents</a></li>
+                <li><a href="../about.html">About</a></li>
+              </ul>
+
+            </section>
+          </nav>
+        </div>
+
+      <div class="row">
+        <div class="large-12 columns">
+          <ul class="breadcrumbs">
+  <li><a href="http://fdietz.github.io/recipes-with-angular-js">Home</a></li>
+  <li><a href="../backend-integration-with-node-express.1">backend-integration-with-node-express</a></li>
+  <li class="current">Consuming REST APIs</li>
+</ul>
+
+<div class="recipe-actions">
+  
+</div>
+
+<h2>Consuming REST APIs</h2>
+
+<h3 id="problem">Problem</h3>
+
+<p>You wish to consume a JSON REST API implemented in your Express application.</p>
+
+<h3 id="solution">Solution</h3>
+
+<p>Using the <code>$resource</code> service we will begin by defining our Contact model and all RESTful actions.</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>app.factory(&quot;Contact&quot;, function($resource) {
+  return $resource(&quot;/api/contacts/:id&quot;, { id: &quot;@_id&quot; },
+    {
+      &#39;create&#39;:  { method: &#39;POST&#39; },
+      &#39;index&#39;:   { method: &#39;GET&#39;, isArray: true },
+      &#39;show&#39;:    { method: &#39;GET&#39;, isArray: false },
+      &#39;update&#39;:  { method: &#39;PUT&#39; },
+      &#39;destroy&#39;: { method: &#39;DELETE&#39; }
+    }
+  );
+});</code></pre>
+</div>
+<p>We can now fetch a list of contacts using <code>Contact.index()</code> and a single contact with <code>Contact.show(id)</code>. These actions can be directly mapped to the API routes defined in <code>app.js</code>.</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>var express = require(&#39;express&#39;),
+        api = require(&#39;./routes/api&#39;);
+
+var app = module.exports = express();
+
+app.get(&#39;/api/contacts&#39;, api.contacts);
+app.get(&#39;/api/contacts/:id&#39;, api.contact);
+app.post(&#39;/api/contacts&#39;, api.createContact);
+app.put(&#39;/api/contacts/:id&#39;, api.updateContact);
+app.delete(&#39;/api/contacts/:id&#39;, api.destroyContact);</code></pre>
+</div>
+<p>I like to keep routes in a separate file <code>routes/api.js</code> and just reference them in <code>app.js</code> in order to keep it small. The API implementation first initializes the <a href="http://mongoosejs.com/">Mongoose</a> library and defines a schema for our Contact model.</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>var mongoose = require(&#39;mongoose&#39;);
+mongoose.connect(&#39;mongodb://localhost/contacts_database&#39;);
+
+var contactSchema = mongoose.Schema({
+  firstname: &#39;string&#39;, lastname: &#39;string&#39;, age: &#39;number&#39;
+});
+var Contact = mongoose.model(&#39;Contact&#39;, contactSchema);</code></pre>
+</div>
+<p>We can now use the <code>Contact</code> model to implement the API. Lets start with the index action:</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>exports.contacts = function(req, res) {
+  Contact.find({}, function(err, obj) {
+    res.json(obj)
+  });
+};</code></pre>
+</div>
+<p>Skipping the error handling we retrieve all contacts with the <code>find</code> function provided by Mongoose and render the result in the JSON format. The show action is pretty similar except it uses <code>findOne</code> and the id from the URL parameter to retrieve a single contact.</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>exports.contact = function(req, res) {
+  Contact.findOne({ _id: req.params.id }, function(err, obj) {
+    res.json(obj);
+  });
+};</code></pre>
+</div>
+<p>As a final example we will create a new Contact instance passing in the request body and call the <code>save</code> method to persist it:</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>exports.createContact = function(req, res) {
+  var contact = new Contact(req.body);
+  contact.save();
+  res.json(req.body);
+};</code></pre>
+</div>
+<p>You can find the complete example on <a href="https://github.com/fdietz/recipes-with-angular-js-examples/tree/master/chapter10/recipe1">github</a>.</p>
+
+<h3 id="discussion">Discussion</h3>
+
+<p>Let have a look again at the example for the contact function, which retrieves a single Contact. It uses <code>_id</code> instead of <code>id</code> as the parameter for the <code>findOne</code> function. This underscore is intentional and used by MongoDB for its auto-generated IDs. In order to automatically map from <code>id</code> to the <code>_id</code> parameter we used a nice trick of the <code>$resource</code> service. Take a look at the second parameter of the Contact <code>$resource</code> definition: <code>{ id: &quot;@_id&quot; }</code>. Using this parameter Angular will automatically set the URL parameter <code>id</code> based on the value of the model attribute <code>_id</code>.</p>
+
+<div class="panel radius similar-pages">
+  <h4>Similar Recipes</h4>
+  <ul>
+    
+      
+    
+      
+        <li>
+          <a href="consuming-rest-apis.html">Consuming REST APIs</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="implementing-client-side-routing.html">Implementing Client-Side Routing</a>
+        </li>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+
+      <footer class="row">
+        <div class="large-12 columns">
+          <hr>
+          <div class="row">
+            <div class="large-6 columns">
+              <p>
+                Maintained by <a href="http://fdietz.de">Frederik Dietz</a>
+              </p>
+            </div>
+
+            <div class="large-6 columns text-right">
+              <p>All content licensed with <a href="http://creativecommons.org/">Creative Commons</a></p>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      <script src="../assets/application-0baff5f0e43111ed2b7cbc8b8b523b9f.js"></script>
+      <script>
+        $(document).foundation();
+      </script>
+
+      <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-42557266-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+      </script>
+
+      <script type="text/javascript">
+        $(function() {
+          $('#search-query').lunrSearch({
+            indexUrl: '/recipes-with-angular-js/search.json',
+            results:  '#search-results',
+            entries:  '.entries',
+            template: '#search-results-template'
+          });
+        });
+      </script>
+    </body>
+</html>

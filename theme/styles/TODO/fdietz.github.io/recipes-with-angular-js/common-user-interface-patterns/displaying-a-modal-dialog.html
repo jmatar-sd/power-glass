@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Recipes with Angular.js - Displaying a Modal Dialog</title>
+    <meta keywords="javascript, js, angular.js, angularjs, recipes with angular.js, recipes with angularjs, best practices, cookbook, tutorial, book">
+    <meta name="viewport" content="width=device-width">
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="../assets/application-64ae7a41d6f726f185cec00ea0549071.css">
+  </head>
+    <body ng-app="RecipesApp">
+
+        <div class="contain-to-grid">
+          <nav class="top-bar">
+            <ul class="title-area">
+              <li class="name">
+                <h1><a href="http://fdietz.github.io/recipes-with-angular-js">Recipes with Angular.js <img src="../assets/AngularJS-Shield-small-0395a23b65050a4d4cc0febd3bbb93f0.png" alt="" width="36" height="36"></a>  </h1>
+              </li>
+              <li class="toggle-topbar menu-icon"><a href="displaying-a-modal-dialog.html#"><span>Menu</span></a></li>
+            </ul>
+
+            <section class="top-bar-section">
+              <ul class="left">
+                <li><a href="../toc.html">Table of Contents</a></li>
+                <li><a href="../about.html">About</a></li>
+              </ul>
+
+            </section>
+          </nav>
+        </div>
+
+      <div class="row">
+        <div class="large-12 columns">
+          <ul class="breadcrumbs">
+  <li><a href="http://fdietz.github.io/recipes-with-angular-js">Home</a></li>
+  <li><a href="../common-user-interface-patterns.1">common-user-interface-patterns</a></li>
+  <li class="current">Displaying a Modal Dialog</li>
+</ul>
+
+<div class="recipe-actions">
+  
+</div>
+
+<h2>Displaying a Modal Dialog</h2>
+
+<h3 id="question">Question</h3>
+
+<p>You wish to use a Modal Dialog using the Twitter Bootstrap Framework. A dialog is called modal when it is blocking the rest of your web application until it is closed.</p>
+
+<h3 id="solution">Solution</h3>
+
+<p>Use the <code>angular-ui</code> module’s nice <code>modal</code> plugin, which directly supports Twitter Bootstrap.</p>
+
+<p>The template defines a button to open the modal and the modal code itself.</p>
+<div>
+  <pre data-line=''><code class='language-markup'>&lt;body ng-app=&quot;MyApp&quot; ng-controller=&quot;MyCtrl&quot;&gt;
+
+  &lt;button class=&quot;btn&quot; ng-click=&quot;open()&quot;&gt;Open Modal&lt;/button&gt;
+
+  &lt;div modal=&quot;showModal&quot; close=&quot;cancel()&quot;&gt;
+    &lt;div class=&quot;modal-header&quot;&gt;
+        &lt;h4&gt;Modal Dialog&lt;/h4&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;modal-body&quot;&gt;
+        &lt;p&gt;Example paragraph with some text.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;modal-footer&quot;&gt;
+      &lt;button class=&quot;btn btn-success&quot; ng-click=&quot;ok()&quot;&gt;Okay&lt;/button&gt;
+      &lt;button class=&quot;btn&quot; ng-click=&quot;cancel()&quot;&gt;Cancel&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+&lt;/body&gt;</code></pre>
+</div>
+<p>Note that even though we don’t specify it explicitly the modal dialog is hidden initially via the <code>modal</code> attribute. The controller only handles the button click and the <code>showModal</code> value used by the <code>modal</code> attribute.</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>var app = angular.module(&quot;MyApp&quot;, [&quot;ui.bootstrap.modal&quot;]);
+
+$scope.open = function() {
+  $scope.showModal = true;
+};
+
+$scope.ok = function() {
+  $scope.showModal = false;
+};
+
+$scope.cancel = function() {
+  $scope.showModal = false;
+};</code></pre>
+</div>
+<p>Do not forget to download and include the angular-ui.js file in a script tag. The module dependency is defined directly to “ui.bootstrap.modal”. The <a href="https://github.com/fdietz/recipes-with-angular-js-examples/tree/master/chapter8/recipe7">full example</a> is available on Github including the angular-ui module.</p>
+
+<p>You can find the complete example on <a href="https://github.com/fdietz/recipes-with-angular-js-examples/tree/master/chapter8/recipe7">github</a>.</p>
+
+<h3 id="discussion">Discussion</h3>
+
+<p>The modal as defined in the template is straight from the Twitter bootstrap <a href="http://twitter.github.com/bootstrap/javascript.html#modals">documentation</a>. We can control the visibility with the <code>modal</code> attribute. Additionally, the <code>close</code> attribute defines a <code>close</code> function which is called whenever the dialog is closed. Note that this could happen if the user presses the <code>escape</code> key or clicking outside the modal.</p>
+
+<p>Our own cancel button uses the same function to close the modal manually, whereas the okay button uses the <code>ok</code> function. This makes it easy for us to distinguish between a user who simply cancelled the modal or actually pressed the okay button.</p>
+
+<div class="panel radius similar-pages">
+  <h4>Similar Recipes</h4>
+  <ul>
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <li>
+          <a href="displaying-a-flash-notice-failure-message.html">Displaying a Flash Notice/Failure Message</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="displaying-a-loading-spinner.html">Displaying a Loading Spinner</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="displaying-a-modal-dialog.html">Displaying a Modal Dialog</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="editing-text-in-place-using-html5-content-editable.html">Editing Text In-Place using HTML5 ContentEditable</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="filtering-and-sorting-a-list.html">Filtering and Sorting a List</a>
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          <a href="paginating-through-client-side-data.html">Paginating Through Client-Side Data</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="paginating-through-server-side-data.html">Paginating Through Server-Side Data</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="paginating-using-infinite-results.html">Paginating Using Infinite Results</a>
+        </li>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+
+      <footer class="row">
+        <div class="large-12 columns">
+          <hr>
+          <div class="row">
+            <div class="large-6 columns">
+              <p>
+                Maintained by <a href="http://fdietz.de">Frederik Dietz</a>
+              </p>
+            </div>
+
+            <div class="large-6 columns text-right">
+              <p>All content licensed with <a href="http://creativecommons.org/">Creative Commons</a></p>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      <script src="../assets/application-0baff5f0e43111ed2b7cbc8b8b523b9f.js"></script>
+      <script>
+        $(document).foundation();
+      </script>
+
+      <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-42557266-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+      </script>
+
+      <script type="text/javascript">
+        $(function() {
+          $('#search-query').lunrSearch({
+            indexUrl: '/recipes-with-angular-js/search.json',
+            results:  '#search-results',
+            entries:  '.entries',
+            template: '#search-results-template'
+          });
+        });
+      </script>
+    </body>
+</html>

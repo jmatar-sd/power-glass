@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Recipes with Angular.js - Client-Side Routing with Hashbang URLs</title>
+    <meta keywords="javascript, js, angular.js, angularjs, recipes with angular.js, recipes with angularjs, best practices, cookbook, tutorial, book">
+    <meta name="viewport" content="width=device-width">
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="../assets/application-64ae7a41d6f726f185cec00ea0549071.css">
+  </head>
+    <body ng-app="RecipesApp">
+
+        <div class="contain-to-grid">
+          <nav class="top-bar">
+            <ul class="title-area">
+              <li class="name">
+                <h1><a href="http://fdietz.github.io/recipes-with-angular-js">Recipes with Angular.js <img src="../assets/AngularJS-Shield-small-0395a23b65050a4d4cc0febd3bbb93f0.png" alt="" width="36" height="36"></a>  </h1>
+              </li>
+              <li class="toggle-topbar menu-icon"><a href="client-side-routing-with-hashbang-urls.html#"><span>Menu</span></a></li>
+            </ul>
+
+            <section class="top-bar-section">
+              <ul class="left">
+                <li><a href="../toc.html">Table of Contents</a></li>
+                <li><a href="../about.html">About</a></li>
+              </ul>
+
+            </section>
+          </nav>
+        </div>
+
+      <div class="row">
+        <div class="large-12 columns">
+          <ul class="breadcrumbs">
+  <li><a href="http://fdietz.github.io/recipes-with-angular-js">Home</a></li>
+  <li><a href="../urls-routing-and-partials.1">urls-routing-and-partials</a></li>
+  <li class="current">Client-Side Routing with Hashbang URLs</li>
+</ul>
+
+<div class="recipe-actions">
+  
+</div>
+
+<h2>Client-Side Routing with Hashbang URLs</h2>
+
+<h3 id="problem">Problem</h3>
+
+<p>You wish the browser address bar to reflect your applications page flow consistently.</p>
+
+<h3 id="solution">Solution</h3>
+
+<p>Use the <code>$routeProvider</code> and <code>$locationProvider</code> services to define your routes and the <code>ng-view</code> directive as the placeholder for the partials, which should be shown for a particular route definition.</p>
+
+<p>The main template uses the <code>ng-view</code> directive:</p>
+<div>
+  <pre data-line=''><code class='language-markup'>&lt;body&gt;
+  &lt;h1&gt;Routing Example&lt;/h1&gt;
+  &lt;ng-view&gt;&lt;/ng-view&gt;
+&lt;/body&gt;</code></pre>
+</div>
+<p>The route configuration is implemented in <code>app.js</code> using the <code>config</code> method:</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>var app = angular.module(&quot;MyApp&quot;, []).
+  config(function($routeProvider, $locationProvider) {
+    $locationProvider.hashPrefix(&#39;!&#39;);
+    $routeProvider.
+      when(&quot;/persons&quot;, { templateUrl: &quot;partials/person_list.html&quot; }).
+      when(&quot;/persons/:id&quot;,
+        { templateUrl: &quot;partials/person_details.html&quot;,
+          controller: &quot;ShowCtrl&quot; }).
+      otherwise( { redirectTo: &quot;/persons&quot; });
+});</code></pre>
+</div>
+<p>It is set up to render either the <code>person_list.html</code> or the <code>person_details.html</code> partial depending on the URL. The partial <code>person_list.html</code> renders a list of <code>persons</code>:</p>
+<div>
+  <pre data-line=''><code class='language-markup'>&lt;h3&gt;Person List&lt;/h3&gt;
+&lt;div ng-controller=&quot;IndexCtrl&quot;&gt;
+  &lt;table&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;td&gt;Name&lt;/td&gt;
+        &lt;td&gt;Actions&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr ng-repeat=&quot;person in persons&quot;&gt;
+        &lt;td&gt;{{person.name}}&lt;/td&gt;
+        &lt;td&gt;&lt;a href=&quot;#!persons/{{person.id}}&quot;&gt;Details&lt;/a&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;</code></pre>
+</div>
+<p>And the partial <code>person_details.html</code> shows more detailed information for a specific <code>person</code>:</p>
+<div>
+  <pre data-line=''><code class='language-markup'>&lt;h3&gt;{{person.name}} Details&lt;/h3&gt;
+&lt;p&gt;Name: {{person.name}}&lt;/p&gt;
+&lt;p&gt;Age: {{person.age}}&lt;/p&gt;
+
+&lt;a href=&quot;#!persons&quot;&gt;Go back&lt;/a&gt;</code></pre>
+</div>
+<p>This example is based on the Angular Seed Bootstrap again and will not work without starting the development server.</p>
+
+<p>You can find the complete example on <a href="https://github.com/fdietz/recipes-with-angular-js-examples/tree/master/chapter6/recipe1">github</a>.</p>
+
+<h3 id="discussion">Discussion</h3>
+
+<p>Let’s give our app a try and open the <code>index.html</code>. The <code>otherwise</code> defined route redirects us from <code>index.html</code> to <code>index.html#!/persons</code>. This is the default behavior in case other <code>when</code> conditions don’t apply.</p>
+
+<p>Take a closer look at the <code>index.html#!/persons</code> URL and note how the hashbang (#!) separates the <code>index.html</code> from the dynamic client-side part <code>/persons</code>. By default, Angular would use the hash (#) character but we configured it to use the hashbang instead, following Google’s <a href="https://developers.google.com/webmasters/ajax-crawling/">Making AJAX applications crawlable</a> guide.</p>
+
+<p>The <code>/persons</code> route loads the <code>person_list.html</code> partial via HTTP Request (that is also the reason why it won’t work without a development server). It shows a list of persons and therefore defines a <code>ng-controller</code> directive inside the template. Let us assume for now that the controller implementation defines a <code>$scope.persons</code> somewhere. Now for each person we also render a link to show the details via <code>#!persons/</code>.</p>
+
+<p>The route definition for the person’s details uses a placeholder <code>/persons/:id</code> which resolves to a specific person’s details, for example <code>/persons/1</code>. The <code>person_details.html</code> partial and additionally a controller are defined for this URL. The controller will be scoped to the partial, which basically resembles our <code>index.html</code> template where we defined our own <code>ng-controller</code> directive to achieve the same effect.</p>
+
+<p>The <code>person_details.html</code> has a back link to <code>#!persons</code> which leads back to the <code>person_list.html</code> page.</p>
+
+<p>Let us come back to the <code>ng-view</code> directive. It is automatically bound to the router definition. Therefore you can currently use only a single <code>ng-view</code> on your page. For example, you cannot use nested <code>ng-view</code>s to achieve user interaction patterns with a first and second level navigation.</p>
+
+<p>And finally the HTTP request for the partials happens only once and is then cached via <code>$templateCache</code> service.</p>
+
+<p>Finally, the hashbang-based routing is client-side only and doesn’t require server-side configuration. Let us look into the HTML5-based approach next.</p>
+
+<div class="panel radius similar-pages">
+  <h4>Similar Recipes</h4>
+  <ul>
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <li>
+          <a href="client-side-routing-with-hashbang-urls.html">Client-Side Routing with Hashbang URLs</a>
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          <a href="listening-on-route-changes-to-implement-a-login-mechanism.html">Listening on Route Changes to Implement a Login Mechanism</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="using-regular-urls-with-the-html5-history-api.html">Using Regular URLs with the HTML5 History API</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="using-route-location-to-implement-a-navigation-menu.html">Using Route Location to Implement a Navigation Menu</a>
+        </li>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+
+      <footer class="row">
+        <div class="large-12 columns">
+          <hr>
+          <div class="row">
+            <div class="large-6 columns">
+              <p>
+                Maintained by <a href="http://fdietz.de">Frederik Dietz</a>
+              </p>
+            </div>
+
+            <div class="large-6 columns text-right">
+              <p>All content licensed with <a href="http://creativecommons.org/">Creative Commons</a></p>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      <script src="../assets/application-0baff5f0e43111ed2b7cbc8b8b523b9f.js"></script>
+      <script>
+        $(document).foundation();
+      </script>
+
+      <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-42557266-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+      </script>
+
+      <script type="text/javascript">
+        $(function() {
+          $('#search-query').lunrSearch({
+            indexUrl: '/recipes-with-angular-js/search.json',
+            results:  '#search-results',
+            entries:  '.entries',
+            template: '#search-results-template'
+          });
+        });
+      </script>
+    </body>
+</html>

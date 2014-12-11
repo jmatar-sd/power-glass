@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Recipes with Angular.js - Filtering a List of DOM Nodes</title>
+    <meta keywords="javascript, js, angular.js, angularjs, recipes with angular.js, recipes with angularjs, best practices, cookbook, tutorial, book">
+    <meta name="viewport" content="width=device-width">
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="../assets/application-64ae7a41d6f726f185cec00ea0549071.css">
+  </head>
+    <body ng-app="RecipesApp">
+
+        <div class="contain-to-grid">
+          <nav class="top-bar">
+            <ul class="title-area">
+              <li class="name">
+                <h1><a href="http://fdietz.github.io/recipes-with-angular-js">Recipes with Angular.js <img src="../assets/AngularJS-Shield-small-0395a23b65050a4d4cc0febd3bbb93f0.png" alt="" width="36" height="36"></a>  </h1>
+              </li>
+              <li class="toggle-topbar menu-icon"><a href="filtering-a-list-of-dom-nodes.html#"><span>Menu</span></a></li>
+            </ul>
+
+            <section class="top-bar-section">
+              <ul class="left">
+                <li><a href="../toc.html">Table of Contents</a></li>
+                <li><a href="../about.html">About</a></li>
+              </ul>
+
+            </section>
+          </nav>
+        </div>
+
+      <div class="row">
+        <div class="large-12 columns">
+          <ul class="breadcrumbs">
+  <li><a href="http://fdietz.github.io/recipes-with-angular-js">Home</a></li>
+  <li><a href="../filters.1">filters</a></li>
+  <li class="current">Filtering a List of DOM Nodes</li>
+</ul>
+
+<div class="recipe-actions">
+  
+    <form class="jsfiddle" method="post" action="http://jsfiddle.net/api/post/library/pure/" target="_blank">
+              <input type="hidden" name="html" value="&lt;body ng-app=&quot;MyApp&quot;&gt;
+  &lt;ul ng-init=&quot;names = [&#39;Peter&#39;, &#39;Anton&#39;, &#39;John&#39;]&quot;&gt;
+    &lt;li ng-repeat=&quot;name in names | exclude:&#39;Peter&#39; &quot;&gt;
+      &lt;span&gt;&#123;&#123;name&#125;&#125;&lt;/span&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/body&gt;"></input>
+
+              <input type="hidden" name="js" value="var app = angular.module(&quot;MyApp&quot;, []);
+
+app.filter(&quot;exclude&quot;, function() {
+  return function(input, exclude) {
+    var result = [];
+    for (var i=0; i&lt;input.length; i++) {
+      if (input[i] !== exclude) {
+        result.push(input[i]);
+      }
+    }
+
+    return result;
+  };
+});"></input>
+
+        
+              <input type="hidden" name="resources" value="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js,http://code.jquery.com/jquery-1.10.1.min.js,http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css"></input>
+
+        <button class="btn small btn-primary">Edit in jsfiddle</button>
+      </form>
+  
+</div>
+
+<h2>Filtering a List of DOM Nodes</h2>
+
+<h3 id="problem">Problem</h3>
+
+<p>You wish to filter a <code>ul</code> list of names.</p>
+
+<h3 id="solution">Solution</h3>
+
+<p>As well as with strings as input, Angular’s filters also work with arrays.</p>
+<div>
+  <pre data-line=''><code class='language-markup'>&lt;body ng-app=&quot;MyApp&quot;&gt;
+  &lt;ul ng-init=&quot;names = [&#39;Peter&#39;, &#39;Anton&#39;, &#39;John&#39;]&quot;&gt;
+    &lt;li ng-repeat=&quot;name in names | exclude:&#39;Peter&#39; &quot;&gt;
+      &lt;span&gt;{{name}}&lt;/span&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/body&gt;</code></pre>
+</div><div>
+  <pre data-line=''><code class='language-javascript'>var app = angular.module(&quot;MyApp&quot;, []);
+
+app.filter(&quot;exclude&quot;, function() {
+  return function(input, exclude) {
+    var result = [];
+    for (var i=0; i&lt;input.length; i++) {
+      if (input[i] !== exclude) {
+        result.push(input[i]);
+      }
+    }
+
+    return result;
+  };
+});</code></pre>
+</div>
+<p>We pass <code>Peter</code> as the single param to the exclude filter, which will render all names except <code>Peter</code>.</p>
+
+<p>You can find the complete example on <a href="https://github.com/fdietz/recipes-with-angular-js-examples/tree/master/chapter4/recipe4">github</a>.</p>
+
+<h3 id="discussion">Discussion</h3>
+
+<p>The filter implementation loops through all names and creates a result array excluding ‘Peter’. Note that the actual syntax of the filter function didn’t change at all from our previous example with the String input.</p>
+
+<div class="panel radius similar-pages">
+  <h4>Similar Recipes</h4>
+  <ul>
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <li>
+          <a href="chaining-filters-together.html">Chaining Filters together</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="filtering-a-list-of-dom-nodes.html">Filtering a List of DOM Nodes</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="formatting-string-with-currency-filter.html">Formatting a String with currency Filter</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="implementing-custom-filter-to-reverse-an-input-string.html">Implementing a Custom Filter to Reverse an Input String</a>
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          <a href="passing-configuration-params-to-filters.html">Passing Configuration Params to Filters</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="testing-filters.html">Testing Filters</a>
+        </li>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+
+      <footer class="row">
+        <div class="large-12 columns">
+          <hr>
+          <div class="row">
+            <div class="large-6 columns">
+              <p>
+                Maintained by <a href="http://fdietz.de">Frederik Dietz</a>
+              </p>
+            </div>
+
+            <div class="large-6 columns text-right">
+              <p>All content licensed with <a href="http://creativecommons.org/">Creative Commons</a></p>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      <script src="../assets/application-0baff5f0e43111ed2b7cbc8b8b523b9f.js"></script>
+      <script>
+        $(document).foundation();
+      </script>
+
+      <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-42557266-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+      </script>
+
+      <script type="text/javascript">
+        $(function() {
+          $('#search-query').lunrSearch({
+            indexUrl: '/recipes-with-angular-js/search.json',
+            results:  '#search-results',
+            entries:  '.entries',
+            template: '#search-results-template'
+          });
+        });
+      </script>
+    </body>
+</html>

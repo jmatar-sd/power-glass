@@ -1,3 +1,5 @@
+@import url(lib/semantic.css);
+@import url(icons/Helium/style.css);
 html {
   width: 100%;
   height: 100%; }
@@ -27,8 +29,18 @@ body {
     border-radius: 22px;
     width: 89%;
     height: 89px;
+    line-height: 89px;
+    text-align: CENTER;
     cursor: move;
     z-indes: 100; }
+    body .top-bar .icon {
+      line-height: 89px;
+      height: 89px;
+      text-align: CENTER;
+      font-size: 4em;
+      margin-left: 5%; }
+      body .top-bar .icon:hover {
+        color: rgba(255, 255, 255, 0.22); }
   body .main-content {
     position: fixed;
     top: 133px;
@@ -38,19 +50,19 @@ body {
     z-indes: 22; }
   body .sales-panel {
     position: absolute;
-    left: 0;
+    left: 0%;
     top: 0;
     width: 60%;
     height: 100%; }
   body .tools-panel {
     position: absolute;
-    right: 0;
+    right: 0%;
     top: 0;
     width: 40%;
     height: 100%; }
   body .footer {
     position: fixed;
-    bottom: 0%;
+    bottom: 0;
     height: 22px;
     width: 89%; }
 

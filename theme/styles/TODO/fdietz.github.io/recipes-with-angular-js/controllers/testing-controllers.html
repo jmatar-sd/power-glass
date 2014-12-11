@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Recipes with Angular.js - Testing Controllers</title>
+    <meta keywords="javascript, js, angular.js, angularjs, recipes with angular.js, recipes with angularjs, best practices, cookbook, tutorial, book">
+    <meta name="viewport" content="width=device-width">
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="../assets/application-64ae7a41d6f726f185cec00ea0549071.css">
+  </head>
+    <body ng-app="RecipesApp">
+
+        <div class="contain-to-grid">
+          <nav class="top-bar">
+            <ul class="title-area">
+              <li class="name">
+                <h1><a href="http://fdietz.github.io/recipes-with-angular-js">Recipes with Angular.js <img src="../assets/AngularJS-Shield-small-0395a23b65050a4d4cc0febd3bbb93f0.png" alt="" width="36" height="36"></a>  </h1>
+              </li>
+              <li class="toggle-topbar menu-icon"><a href="testing-controllers.html#"><span>Menu</span></a></li>
+            </ul>
+
+            <section class="top-bar-section">
+              <ul class="left">
+                <li><a href="../toc.html">Table of Contents</a></li>
+                <li><a href="../about.html">About</a></li>
+              </ul>
+
+            </section>
+          </nav>
+        </div>
+
+      <div class="row">
+        <div class="large-12 columns">
+          <ul class="breadcrumbs">
+  <li><a href="http://fdietz.github.io/recipes-with-angular-js">Home</a></li>
+  <li><a href="../controllers.1">controllers</a></li>
+  <li class="current">Testing Controllers</li>
+</ul>
+
+<div class="recipe-actions">
+  
+</div>
+
+<h2>Testing Controllers</h2>
+
+<h3 id="problem">Problem</h3>
+
+<p>You wish to unit test your business logic.</p>
+
+<h3 id="solution">Solution</h3>
+
+<p>Implement a unit test using <a href="http://pivotal.github.com/jasmine/">Jasmine</a> and the <a href="https://github.com/angular/angular-seed">angular-seed</a> project. Following our previous <code>$watch</code> recipe, this is how our spec would look.</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>describe(&#39;MyCtrl&#39;, function(){
+  var scope, ctrl;
+
+  beforeEach(inject(function($controller, $rootScope) {
+    scope = $rootScope.$new();
+    ctrl = $controller(MyCtrl, { $scope: scope });
+  }));
+
+  it(&#39;should change greeting value if name value is changed&#39;, function() {
+    scope.name = &quot;Frederik&quot;;
+    scope.$digest();
+    expect(scope.greeting).toBe(&quot;Greetings Frederik&quot;);
+  });
+});</code></pre>
+</div>
+<h3 id="discussion">Discussion</h3>
+
+<p>Jasmine specs use <code>describe</code> and <code>it</code> functions to group specs and <code>beforeEach</code> and <code>afterEach</code> to setup and teardown code. The actual expectation compares the greeting from the scope with our expectation <code>Greetings Frederik</code>.</p>
+
+<p>The scope and controller initialization is a bit more involved. We use <code>inject</code> to initialize the scope and controller as closely as possible to how our code would behave at runtime too. We can’t just initialize the scope as a Javascript object <code>{}</code> since we would then not be able to call <code>$watch</code> on it. Instead <code>$rootScope.$new()</code> will do the trick. Note that the <code>$controller</code> service requires <code>MyCtrl</code> to be available and uses an object notation to pass in dependencies.</p>
+
+<p>The <code>$digest</code> call is required in order to trigger a watch execution after we have changed the scope. We need to call <code>$digest</code> manually in our spec whereas at runtime Angular will do this for us automatically.</p>
+
+<div class="panel radius similar-pages">
+  <h4>Similar Recipes</h4>
+  <ul>
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <li>
+          <a href="assigning-a-default-value-to-a-model.html">Assigning a Default Value to a Model</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="changing-a-model-value-with-a-controller-function.html">Changing a Model Value with a Controller Function</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="encapsulation-a-model-value-with-a-controller-function.html">Encapsulating a Model Value with a Controller Function</a>
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          <a href="responding-to-scope-changes.html">Responding to Scope Changes</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="sharing-code-between-controllers-using-services.html">Sharing Code Between Controllers using Services</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="sharing-models-between-nested-controllers.html">Sharing Models Between Nested Controllers</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="testing-controllers.html">Testing Controllers</a>
+        </li>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+
+      <footer class="row">
+        <div class="large-12 columns">
+          <hr>
+          <div class="row">
+            <div class="large-6 columns">
+              <p>
+                Maintained by <a href="http://fdietz.de">Frederik Dietz</a>
+              </p>
+            </div>
+
+            <div class="large-6 columns text-right">
+              <p>All content licensed with <a href="http://creativecommons.org/">Creative Commons</a></p>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      <script src="../assets/application-0baff5f0e43111ed2b7cbc8b8b523b9f.js"></script>
+      <script>
+        $(document).foundation();
+      </script>
+
+      <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-42557266-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+      </script>
+
+      <script type="text/javascript">
+        $(function() {
+          $('#search-query').lunrSearch({
+            indexUrl: '/recipes-with-angular-js/search.json',
+            results:  '#search-results',
+            entries:  '.entries',
+            template: '#search-results-template'
+          });
+        });
+      </script>
+    </body>
+</html>

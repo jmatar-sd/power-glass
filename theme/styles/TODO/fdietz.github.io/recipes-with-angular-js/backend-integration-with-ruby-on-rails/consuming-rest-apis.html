@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Recipes with Angular.js - Consuming REST APIs</title>
+    <meta keywords="javascript, js, angular.js, angularjs, recipes with angular.js, recipes with angularjs, best practices, cookbook, tutorial, book">
+    <meta name="viewport" content="width=device-width">
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="../assets/application-64ae7a41d6f726f185cec00ea0549071.css">
+  </head>
+    <body ng-app="RecipesApp">
+
+        <div class="contain-to-grid">
+          <nav class="top-bar">
+            <ul class="title-area">
+              <li class="name">
+                <h1><a href="http://fdietz.github.io/recipes-with-angular-js">Recipes with Angular.js <img src="../assets/AngularJS-Shield-small-0395a23b65050a4d4cc0febd3bbb93f0.png" alt="" width="36" height="36"></a>  </h1>
+              </li>
+              <li class="toggle-topbar menu-icon"><a href="consuming-rest-apis.html#"><span>Menu</span></a></li>
+            </ul>
+
+            <section class="top-bar-section">
+              <ul class="left">
+                <li><a href="../toc.html">Table of Contents</a></li>
+                <li><a href="../about.html">About</a></li>
+              </ul>
+
+            </section>
+          </nav>
+        </div>
+
+      <div class="row">
+        <div class="large-12 columns">
+          <ul class="breadcrumbs">
+  <li><a href="http://fdietz.github.io/recipes-with-angular-js">Home</a></li>
+  <li><a href="../backend-integration-with-ruby-on-rails.1">backend-integration-with-ruby-on-rails</a></li>
+  <li class="current">Consuming REST APIs</li>
+</ul>
+
+<div class="recipe-actions">
+  
+</div>
+
+<h2>Consuming REST APIs</h2>
+
+<h3 id="problem">Problem</h3>
+
+<p>You wish to consume a JSON REST API implemented in your Rails application.</p>
+
+<h3 id="solution">Solution</h3>
+
+<p>Using the <code>$resource</code> service is a great start and can be tweaked to feel more natural to a Rails developer by configuring the methods in accordance with the Rails actions.</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>app.factory(&quot;Contact&quot;, function($resource) {
+  return $resource(&quot;/api/contacts/:id&quot;, { id: &quot;@id&quot; },
+    {
+      &#39;create&#39;:  { method: &#39;POST&#39; },
+      &#39;index&#39;:   { method: &#39;GET&#39;, isArray: true },
+      &#39;show&#39;:    { method: &#39;GET&#39;, isArray: false },
+      &#39;update&#39;:  { method: &#39;PUT&#39; },
+      &#39;destroy&#39;: { method: &#39;DELETE&#39; }
+    }
+  );
+});</code></pre>
+</div>
+<p>We can now fetch a list of contacts using <code>Contact.index()</code> and a single contact with <code>Contact.show(id)</code>. These actions can be directly mapped to the <code>ContactsController</code> actions in your Rails backend.</p>
+<div>
+  <pre data-line=''><code class='language-ruby'>class ContactsController &lt; ApplicationController
+  respond_to :json
+
+  def index
+    @contacts = Contact.all
+    respond_with @contacts
+  end
+
+  def show
+    @contact = Contact.find(params[:id])
+    respond_with @contact
+  end
+
+  ...
+end</code></pre>
+</div>
+<p>The Rails action controller uses a <code>Contact</code> ActiveRecord model with the usual contact attributes like firstname, lastname, age, etc. By specifying <code>respond_to :json</code> the controller only responds to the JSON resource format and we can use <code>respond_with</code> to automatically transform the <code>Contact</code> model to a JSON response.</p>
+
+<p>The route definition uses the Rails default resource routing and an <code>api</code> scope to separate the API requests from other requests.</p>
+<div>
+  <pre data-line=''><code class='language-ruby'>Contacts::Application.routes.draw do
+  scope &quot;api&quot; do
+    resources :contacts
+  end
+end</code></pre>
+</div>
+<p>This will generate paths like for example <code>api/contacts</code> and <code>api/contacts/:id</code> for the HTTP GET method.</p>
+
+<p>You can find the complete example on <a href="https://github.com/fdietz/recipes-with-angular-js-examples/tree/master/chapter9/recipe1">github</a>.</p>
+
+<h3 id="discussion">Discussion</h3>
+
+<p>If you want to get up to speed with Ruby on Rails, I suggest that you look into the <a href="http://guides.rubyonrails.org/index.html">Rails Guides</a> which will help you understand how all the pieces fit together.</p>
+
+<h4 id="rails_security_using_authenticity_token">Rails Security using Authenticity Token</h4>
+
+<p>The example code above works nicely until we use the HTTP methods <code>POST</code>, <code>PUT</code> and <code>DELETE</code> with the resource. As a security mechanism, Rails expects an authenticity token to prevent a CSRF (<a href="http://guides.rubyonrails.org/security.html#cross-site-request-forgery-csrf">Cross Site Request Forgery</a>) attack. We need to submit an additional HTTP header <code>X-CSRF-Token</code> with the token. It is conveniently rendered in the HTML <code>meta</code> tag <code>csrf-token</code> by Rails. Using jQuery we can fetch that meta tag definition and configure the <code>$httpProvider</code> appropriately.</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>var app = angular.module(&quot;Contacts&quot;, [&quot;ngResource&quot;]);
+app.config(function($httpProvider) {
+  $httpProvider.defaults.headers.common[&#39;X-CSRF-Token&#39;] =
+    $(&#39;meta[name=csrf-token]&#39;).attr(&#39;content&#39;);
+});</code></pre>
+</div>
+<h4 id="rails_json_response_format">Rails JSON response format</h4>
+
+<p>If you are using a Rails version prior 3.1, you’ll notice that the JSON response will use a <code>contact</code> namespace for the model attributes which breaks your Angular.js code. To disable this behavior you can configure your Rails app accordingly.</p>
+<div>
+  <pre data-line=''><code class='language-ruby'>ActiveRecord::Base.include_root_in_json = false</code></pre>
+</div>
+<p>There are still inconsistencies between the Ruby and Javascript world. For example, in Ruby we use underscored attribute names (display_name) whereas in Javascript we use camelCase (displayName).</p>
+
+<p>There is a custom <code>$resource</code> implementation <a href="https://github.com/tpodom/angularjs-rails-resource">angularjs-rails-resource</a> available to streamline consuming Rails resources. It uses transformers and inceptors to rename the attribute fields and handles the root wrapping behavior for you.</p>
+
+<div class="panel radius similar-pages">
+  <h4>Similar Recipes</h4>
+  <ul>
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <li>
+          <a href="consuming-rest-apis.html">Consuming REST APIs</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="implementing-client-side-routing.html">Implementing Client-Side Routing</a>
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          <a href="validating-forms-server-side.html">Validating Forms Server-Side</a>
+        </li>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+
+      <footer class="row">
+        <div class="large-12 columns">
+          <hr>
+          <div class="row">
+            <div class="large-6 columns">
+              <p>
+                Maintained by <a href="http://fdietz.de">Frederik Dietz</a>
+              </p>
+            </div>
+
+            <div class="large-6 columns text-right">
+              <p>All content licensed with <a href="http://creativecommons.org/">Creative Commons</a></p>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      <script src="../assets/application-0baff5f0e43111ed2b7cbc8b8b523b9f.js"></script>
+      <script>
+        $(document).foundation();
+      </script>
+
+      <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-42557266-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+      </script>
+
+      <script type="text/javascript">
+        $(function() {
+          $('#search-query').lunrSearch({
+            indexUrl: '/recipes-with-angular-js/search.json',
+            results:  '#search-results',
+            entries:  '.entries',
+            template: '#search-results-template'
+          });
+        });
+      </script>
+    </body>
+</html>

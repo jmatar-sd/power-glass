@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Recipes with Angular.js - Paginating Through Server-Side Data</title>
+    <meta keywords="javascript, js, angular.js, angularjs, recipes with angular.js, recipes with angularjs, best practices, cookbook, tutorial, book">
+    <meta name="viewport" content="width=device-width">
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="../assets/application-64ae7a41d6f726f185cec00ea0549071.css">
+  </head>
+    <body ng-app="RecipesApp">
+
+        <div class="contain-to-grid">
+          <nav class="top-bar">
+            <ul class="title-area">
+              <li class="name">
+                <h1><a href="http://fdietz.github.io/recipes-with-angular-js">Recipes with Angular.js <img src="../assets/AngularJS-Shield-small-0395a23b65050a4d4cc0febd3bbb93f0.png" alt="" width="36" height="36"></a>  </h1>
+              </li>
+              <li class="toggle-topbar menu-icon"><a href="paginating-through-server-side-data.html#"><span>Menu</span></a></li>
+            </ul>
+
+            <section class="top-bar-section">
+              <ul class="left">
+                <li><a href="../toc.html">Table of Contents</a></li>
+                <li><a href="../about.html">About</a></li>
+              </ul>
+
+            </section>
+          </nav>
+        </div>
+
+      <div class="row">
+        <div class="large-12 columns">
+          <ul class="breadcrumbs">
+  <li><a href="http://fdietz.github.io/recipes-with-angular-js">Home</a></li>
+  <li><a href="../common-user-interface-patterns.1">common-user-interface-patterns</a></li>
+  <li class="current">Paginating Through Server-Side Data</li>
+</ul>
+
+<div class="recipe-actions">
+  
+    <form class="jsfiddle" method="post" action="http://jsfiddle.net/api/post/library/pure/" target="_blank">
+              <input type="hidden" name="html" value="&lt;body ng-app=&quot;MyApp&quot;&gt;
+  &lt;div ng-controller=&quot;PaginationCtrl&quot;&gt;
+    &lt;table class=&quot;table table-striped&quot;&gt;
+      &lt;thead&gt;
+        &lt;tr&gt;
+          &lt;th&gt;Id&lt;/th&gt;
+          &lt;th&gt;Name&lt;/th&gt;
+          &lt;th&gt;Description&lt;/th&gt;
+        &lt;/tr&gt;
+      &lt;/thead&gt;
+      &lt;tbody&gt;
+        &lt;tr ng-repeat=&quot;item in pagedItems&quot;&gt;
+          &lt;td&gt;&#123;&#123;item.id&#125;&#125;&lt;/td&gt;
+          &lt;td&gt;&#123;&#123;item.name&#125;&#125;&lt;/td&gt;
+          &lt;td&gt;&#123;&#123;item.description&#125;&#125;&lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/tbody&gt;
+      &lt;tfoot&gt;
+        &lt;td colspan=&quot;3&quot;&gt;
+          &lt;div class=&quot;pagination&quot;&gt;
+            &lt;ul&gt;
+              &lt;li ng-class=&quot;prevPageDisabled()&quot;&gt;
+                &lt;a href ng-click=&quot;prevPage()&quot;&gt;« Prev&lt;/a&gt;
+              &lt;/li&gt;
+              &lt;li ng-repeat=&quot;n in range()&quot; ng-class=&quot;{active: n == currentPage}&quot; ng-click=&quot;setPage(n)&quot;&gt;
+                &lt;a href=&quot;#&quot;&gt;&#123;&#123;n+1&#125;&#125;&lt;/a&gt;
+              &lt;/li&gt;
+              &lt;li ng-class=&quot;nextPageDisabled()&quot;&gt;
+                &lt;a href ng-click=&quot;nextPage()&quot;&gt;Next »&lt;/a&gt;
+              &lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/div&gt;
+        &lt;/td&gt;
+      &lt;/tfoot&gt;
+    &lt;/table&gt;
+  &lt;/div&gt;
+&lt;/body&gt;"></input>
+
+              <input type="hidden" name="js" value="var app = angular.module(&quot;MyApp&quot;, []);
+
+app.factory(&quot;Item&quot;, function() {
+
+  var items = [];
+  for (var i=0; i&lt;50; i++) {
+    items.push({ id: i, name: &quot;name &quot;+ i, description: &quot;description &quot; + i });
+  }
+
+  return {
+    get: function(offset, limit) {
+      return items.slice(offset, offset+limit);
+    },
+    total: function() {
+      return items.length;
+    }
+  };
+});
+
+app.controller(&quot;PaginationCtrl&quot;, function($scope, Item) {
+
+  $scope.itemsPerPage = 5;
+  $scope.currentPage = 0;
+
+  $scope.range = function() {
+    var rangeSize = 5;
+    var ret = [];
+    var start;
+
+    start = $scope.currentPage;
+    if ( start &gt; $scope.pageCount()-rangeSize ) {
+      start = $scope.pageCount()-rangeSize;
+    }
+
+    for (var i=start; i&lt;start+rangeSize; i++) {
+      ret.push(i);
+    }
+    return ret;
+  };
+
+
+  $scope.prevPage = function() {
+    if ($scope.currentPage &gt; 0) {
+      $scope.currentPage--;
+    }
+  };
+
+  $scope.prevPageDisabled = function() {
+    return $scope.currentPage === 0 ? &quot;disabled&quot; : &quot;&quot;;
+  };
+
+  $scope.nextPage = function() {
+    if ($scope.currentPage &lt; $scope.pageCount() - 1) {
+      $scope.currentPage++;
+    }
+  };
+
+  $scope.nextPageDisabled = function() {
+    return $scope.currentPage === $scope.pageCount() - 1 ? &quot;disabled&quot; : &quot;&quot;;
+  };
+
+  $scope.pageCount = function() {
+    return Math.ceil($scope.total/$scope.itemsPerPage);
+  };
+
+  $scope.setPage = function(n) {
+    if (n &gt; 0 &amp;&amp; n &lt; $scope.pageCount()) {
+      $scope.currentPage = n;
+    }
+  };
+
+  $scope.$watch(&quot;currentPage&quot;, function(newValue, oldValue) {
+    $scope.pagedItems = Item.get(newValue*$scope.itemsPerPage, $scope.itemsPerPage);
+    $scope.total = Item.total();
+  });
+
+});"></input>
+
+        
+              <input type="hidden" name="resources" value="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js,http://code.jquery.com/jquery-1.10.1.min.js,http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css"></input>
+
+        <button class="btn small btn-primary">Edit in jsfiddle</button>
+      </form>
+  
+</div>
+
+<h2>Paginating Through Server-Side Data</h2>
+
+<h3 id="problem">Problem</h3>
+
+<p>You wish to paginate through a large server-side result set.</p>
+
+<h3 id="solution">Solution</h3>
+
+<p>You cannot use the previous method with a filter since that would require all data to be available on the client. Instead we use an implementation with a controller only instead.</p>
+
+<p>The template has not changed much. Only the <code>ng-repeat</code> directive looks simpler now:</p>
+<div>
+  <pre data-line=''><code class='language-markup'>&lt;tr ng-repeat=&quot;item in pagedItems&quot;&gt;
+  &lt;td&gt;{{item.id}}&lt;/td&gt;
+  &lt;td&gt;{{item.name}}&lt;/td&gt;
+  &lt;td&gt;{{item.description}}&lt;/td&gt;
+&lt;/tr&gt;</code></pre>
+</div>
+<p>In order to simplify the example we will fake a server-side service by providing an Angular service implementation for the items.</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>app.factory(&quot;Item&quot;, function() {
+
+  var items = [];
+  for (var i=0; i&lt;50; i++) {
+    items.push({
+      id: i, name: &quot;name &quot;+ i, description: &quot;description &quot; + i
+    });
+  }
+
+  return {
+    get: function(offset, limit) {
+      return items.slice(offset, offset+limit);
+    },
+    total: function() {
+      return items.length;
+    }
+  };
+});</code></pre>
+</div>
+<p>The service manages a list of items and has methods for retrieving a subset of items for a given offset and limit and the total number of items.</p>
+
+<p>The controller uses dependency injection to access the <code>Item</code> service and contains almost the same methods as our previous recipe.</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>app.controller(&quot;PaginationCtrl&quot;, function($scope, Item) {
+
+  $scope.itemsPerPage = 5;
+  $scope.currentPage = 0;
+
+  $scope.prevPage = function() {
+    if ($scope.currentPage &gt; 0) {
+      $scope.currentPage--;
+    }
+  };
+
+  $scope.prevPageDisabled = function() {
+    return $scope.currentPage === 0 ? &quot;disabled&quot; : &quot;&quot;;
+  };
+
+  $scope.nextPage = function() {
+    if ($scope.currentPage &lt; $scope.pageCount() - 1) {
+      $scope.currentPage++;
+    }
+  };
+
+  $scope.nextPageDisabled = function() {
+    return $scope.currentPage === $scope.pageCount() - 1 ? &quot;disabled&quot; : &quot;&quot;;
+  };
+
+  $scope.pageCount = function() {
+    return Math.ceil($scope.total/$scope.itemsPerPage);
+  };
+
+  $scope.$watch(&quot;currentPage&quot;, function(newValue, oldValue) {
+    $scope.pagedItems =
+      Item.get(newValue*$scope.itemsPerPage, $scope.itemsPerPage);
+    $scope.total = Item.total();
+  });
+
+});</code></pre>
+</div>
+<p>You can find the complete example on <a href="https://github.com/fdietz/recipes-with-angular-js-examples/tree/master/chapter8/recipe3">github</a>.</p>
+
+<h3 id="discussion">Discussion</h3>
+
+<p>When you select the next/previous page you will change the <code>$scope.currentPage</code> value and the <code>$watch</code> function is triggered. It fetches fresh items for the current page and the total number of items. So, on the client side we only have five items available as defined in <code>itemsPerPage</code> and when paginating we throw away the items of the previous page and fetch new items.</p>
+
+<p>If you want to try this with a real backend you only have to swap out the <code>Item</code> service implementation.</p>
+
+<div class="panel radius similar-pages">
+  <h4>Similar Recipes</h4>
+  <ul>
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <li>
+          <a href="displaying-a-flash-notice-failure-message.html">Displaying a Flash Notice/Failure Message</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="displaying-a-loading-spinner.html">Displaying a Loading Spinner</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="displaying-a-modal-dialog.html">Displaying a Modal Dialog</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="editing-text-in-place-using-html5-content-editable.html">Editing Text In-Place using HTML5 ContentEditable</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="filtering-and-sorting-a-list.html">Filtering and Sorting a List</a>
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          <a href="paginating-through-client-side-data.html">Paginating Through Client-Side Data</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="paginating-through-server-side-data.html">Paginating Through Server-Side Data</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="paginating-using-infinite-results.html">Paginating Using Infinite Results</a>
+        </li>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+
+      <footer class="row">
+        <div class="large-12 columns">
+          <hr>
+          <div class="row">
+            <div class="large-6 columns">
+              <p>
+                Maintained by <a href="http://fdietz.de">Frederik Dietz</a>
+              </p>
+            </div>
+
+            <div class="large-6 columns text-right">
+              <p>All content licensed with <a href="http://creativecommons.org/">Creative Commons</a></p>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      <script src="../assets/application-0baff5f0e43111ed2b7cbc8b8b523b9f.js"></script>
+      <script>
+        $(document).foundation();
+      </script>
+
+      <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-42557266-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+      </script>
+
+      <script type="text/javascript">
+        $(function() {
+          $('#search-query').lunrSearch({
+            indexUrl: '/recipes-with-angular-js/search.json',
+            results:  '#search-results',
+            entries:  '.entries',
+            template: '#search-results-template'
+          });
+        });
+      </script>
+    </body>
+</html>

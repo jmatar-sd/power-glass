@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Recipes with Angular.js - Passing Configuration Params Using HTML Attributes</title>
+    <meta keywords="javascript, js, angular.js, angularjs, recipes with angular.js, recipes with angularjs, best practices, cookbook, tutorial, book">
+    <meta name="viewport" content="width=device-width">
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="../assets/application-64ae7a41d6f726f185cec00ea0549071.css">
+  </head>
+    <body ng-app="RecipesApp">
+
+        <div class="contain-to-grid">
+          <nav class="top-bar">
+            <ul class="title-area">
+              <li class="name">
+                <h1><a href="http://fdietz.github.io/recipes-with-angular-js">Recipes with Angular.js <img src="../assets/AngularJS-Shield-small-0395a23b65050a4d4cc0febd3bbb93f0.png" alt="" width="36" height="36"></a>  </h1>
+              </li>
+              <li class="toggle-topbar menu-icon"><a href="passing-configuration-params-using-html-attributes.html#"><span>Menu</span></a></li>
+            </ul>
+
+            <section class="top-bar-section">
+              <ul class="left">
+                <li><a href="../toc.html">Table of Contents</a></li>
+                <li><a href="../about.html">About</a></li>
+              </ul>
+
+            </section>
+          </nav>
+        </div>
+
+      <div class="row">
+        <div class="large-12 columns">
+          <ul class="breadcrumbs">
+  <li><a href="http://fdietz.github.io/recipes-with-angular-js">Home</a></li>
+  <li><a href="../directives.1">directives</a></li>
+  <li class="current">Passing Configuration Params Using HTML Attributes</li>
+</ul>
+
+<div class="recipe-actions">
+  
+    <form class="jsfiddle" method="post" action="http://jsfiddle.net/api/post/library/pure/" target="_blank">
+              <input type="hidden" name="html" value="&lt;body ng-app=&quot;MyApp&quot;&gt;
+  &lt;div my-widget=&quot;Hello World&quot;&gt;&lt;/div&gt;
+
+  &lt;my-widget-bi text=&quot;Hello World&quot;&gt;&lt;/my-widget-bi&gt;
+
+  &lt;my-widget-expr fn=&quot;count = count + 1&quot;&gt;&lt;/my-widget-expr&gt;
+&lt;/body&gt;
+"></input>
+
+              <input type="hidden" name="js" value="var app = angular.module(&quot;MyApp&quot;, []);
+
+app.directive(&quot;myWidget&quot;, function() {
+  var linkFunction = function(scope, element, attributes) {
+    scope.text = attributes[&quot;myWidget&quot;];
+  };
+
+  return {
+    restrict: &quot;A&quot;,
+    template: &quot;&lt;p&gt;&#123;&#123;text&#125;&#125;&lt;/p&gt;&quot;,
+    link: linkFunction,
+    scope: {}
+  };
+});
+
+app.directive(&quot;myWidgetBi&quot;, function() {
+  return {
+    restrict: &quot;E&quot;,
+    template: &quot;&lt;p&gt;&#123;&#123;text&#125;&#125;&lt;/p&gt;&quot;,
+    scope: {
+      text: &quot;@text&quot;
+    }
+  };
+});
+
+app.directive(&quot;myWidgetExpr&quot;, function() {
+  var linkFunction = function(scope, element, attributes) {
+    scope.text = scope.fn({ count: 5 });
+  };
+
+  return {
+    restrict: &quot;E&quot;,
+    template: &quot;&lt;p&gt;&#123;&#123;text&#125;&#125;&lt;/p&gt;&quot;,
+    link: linkFunction,
+    scope: {
+      fn: &quot;&amp;fn&quot;
+    }
+  };
+});"></input>
+
+        
+              <input type="hidden" name="resources" value="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js,http://code.jquery.com/jquery-1.10.1.min.js,http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css"></input>
+
+        <button class="btn small btn-primary">Edit in jsfiddle</button>
+      </form>
+  
+</div>
+
+<h2>Passing Configuration Params Using HTML Attributes</h2>
+
+<h3 id="problem">Problem</h3>
+
+<p>You wish to pass a configuration param to change the rendered output.</p>
+
+<h3 id="solution">Solution</h3>
+
+<p>Use the attribute-based directive and pass an attribute value for the configuration. The attribute is passed as a parameter to the link function.</p>
+<div>
+  <pre data-line=''><code class='language-markup'>&lt;body ng-app=&quot;MyApp&quot;&gt;
+  &lt;div my-widget=&quot;Hello World&quot;&gt;&lt;/div&gt;
+&lt;/body&gt;</code></pre>
+</div><div>
+  <pre data-line=''><code class='language-javascript'>var app = angular.module(&quot;MyApp&quot;, []);
+
+app.directive(&quot;myWidget&quot;, function() {
+  var linkFunction = function(scope, element, attributes) {
+    scope.text = attributes[&quot;myWidget&quot;];
+  };
+
+  return {
+    restrict: &quot;A&quot;,
+    template: &quot;&lt;p&gt;&lt;/p&gt;&quot;,
+    link: linkFunction
+  };
+});</code></pre>
+</div>
+<p>This renders a paragraph with the text passed as the param.</p>
+
+<h3 id="discussion">Discussion</h3>
+
+<p>The link function has access to the element and its attributes. It is therefore straightforward to set the scope to the text passed as the attributes value and use this in the template evaluation.</p>
+
+<p>The scope context is important though. The <code>text</code> model we changed might already be defined in the parent scope and used in another part of your app. In order to isolate the context and thereby use it only locally inside your directive, we have to return an additional scope attribute.</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>return {
+  restrict: &quot;A&quot;,
+  template: &quot;&lt;p&gt;&lt;/p&gt;&quot;,
+  link: linkFunction,
+  scope: {}
+};</code></pre>
+</div>
+<p>In Angular this is called an isolate scope. It does not prototypically inherit from the parent scope and is especially useful when creating reusable components.</p>
+
+<p>Let’s look into another way of passing params to the directive. This time we will define an HTML element <code>my-widget2</code>.</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>&lt;my-widget2 text=&quot;Hello World&quot;&gt;&lt;/my-widget2&gt;
+
+app.directive(&quot;myWidget2&quot;, function() {
+  return {
+    restrict: &quot;E&quot;,
+    template: &quot;&lt;p&gt;&lt;/p&gt;&quot;,
+    scope: {
+      text: &quot;@text&quot;
+    }
+  };
+});</code></pre>
+</div>
+<p>The scope definition using <code>@text</code> is binding the text model to the directive’s attribute. Note that any changes to the parent scope <code>text</code> will change the local scope <code>text</code>, but not the other way around.</p>
+
+<p>If you want instead to have a bi-directional binding between the parent scope and the local scope, you should use the <code>=</code> equality character:</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>scope: {
+  text: &quot;=text&quot;
+}</code></pre>
+</div>
+<p>Changes to the local scope will also change the parent scope.</p>
+
+<p>Another option would be to pass an expression as a function to the directive using the <code>&amp;</code> character.</p>
+<div>
+  <pre data-line=''><code class='language-markup'>&lt;my-widget-expr fn=&quot;count = count + 1&quot;&gt;&lt;/my-widget-expr&gt;</code></pre>
+</div><div>
+  <pre data-line=''><code class='language-javascript'>app.directive(&quot;myWidgetExpr&quot;, function() {
+  var linkFunction = function(scope, element, attributes) {
+    scope.text = scope.fn({ count: 5 });
+  };
+
+  return {
+    restrict: &quot;E&quot;,
+    template: &quot;&lt;p&gt;&lt;/p&gt;&quot;,
+    link: linkFunction,
+    scope: {
+      fn: &quot;&amp;fn&quot;
+    }
+  };
+});</code></pre>
+</div>
+<p>We pass the attribute <code>fn</code> to the directive and since the local scope defines <code>fn</code> accordingly we can call the function in the <code>linkFunction</code> and pass in the expression arguments as a hash.</p>
+
+<div class="panel radius similar-pages">
+  <h4>Similar Recipes</h4>
+  <ul>
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <li>
+          <a href="changing-the-dom-in-response-to-user-actions.html">Changing the DOM in response to user actions</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="directive-to-directive-communication.html">Directive-to-Directive Communication</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="enabling-disabling-dom-elements-conditionally.html">Enabling/Disabling DOM Elements Conditionally</a>
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          <a href="passing-configuration-params-using-html-attributes.html">Passing Configuration Params Using HTML Attributes</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="rendering-a-directives-dom-node-children.html">Rendering a Directive's DOM Node Children</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="rendering-an-html-snippet-in-a-directive.html">Rendering an HTML Snippet in a Directive</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="repeatedly-rendering-directives-dom-node-children.html">Repeatedly Rendering Directive's DOM Node Children</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="testing-directives.html">Testing Directives</a>
+        </li>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+
+      <footer class="row">
+        <div class="large-12 columns">
+          <hr>
+          <div class="row">
+            <div class="large-6 columns">
+              <p>
+                Maintained by <a href="http://fdietz.de">Frederik Dietz</a>
+              </p>
+            </div>
+
+            <div class="large-6 columns text-right">
+              <p>All content licensed with <a href="http://creativecommons.org/">Creative Commons</a></p>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      <script src="../assets/application-0baff5f0e43111ed2b7cbc8b8b523b9f.js"></script>
+      <script>
+        $(document).foundation();
+      </script>
+
+      <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-42557266-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+      </script>
+
+      <script type="text/javascript">
+        $(function() {
+          $('#search-query').lunrSearch({
+            indexUrl: '/recipes-with-angular-js/search.json',
+            results:  '#search-results',
+            entries:  '.entries',
+            template: '#search-results-template'
+          });
+        });
+      </script>
+    </body>
+</html>

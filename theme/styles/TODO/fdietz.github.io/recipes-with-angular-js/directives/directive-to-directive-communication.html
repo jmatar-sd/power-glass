@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Recipes with Angular.js - Directive-to-Directive Communication</title>
+    <meta keywords="javascript, js, angular.js, angularjs, recipes with angular.js, recipes with angularjs, best practices, cookbook, tutorial, book">
+    <meta name="viewport" content="width=device-width">
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="../assets/application-64ae7a41d6f726f185cec00ea0549071.css">
+  </head>
+    <body ng-app="RecipesApp">
+
+        <div class="contain-to-grid">
+          <nav class="top-bar">
+            <ul class="title-area">
+              <li class="name">
+                <h1><a href="http://fdietz.github.io/recipes-with-angular-js">Recipes with Angular.js <img src="../assets/AngularJS-Shield-small-0395a23b65050a4d4cc0febd3bbb93f0.png" alt="" width="36" height="36"></a>  </h1>
+              </li>
+              <li class="toggle-topbar menu-icon"><a href="directive-to-directive-communication.html#"><span>Menu</span></a></li>
+            </ul>
+
+            <section class="top-bar-section">
+              <ul class="left">
+                <li><a href="../toc.html">Table of Contents</a></li>
+                <li><a href="../about.html">About</a></li>
+              </ul>
+
+            </section>
+          </nav>
+        </div>
+
+      <div class="row">
+        <div class="large-12 columns">
+          <ul class="breadcrumbs">
+  <li><a href="http://fdietz.github.io/recipes-with-angular-js">Home</a></li>
+  <li><a href="../directives.1">directives</a></li>
+  <li class="current">Directive-to-Directive Communication</li>
+</ul>
+
+<div class="recipe-actions">
+  
+    <form class="jsfiddle" method="post" action="http://jsfiddle.net/api/post/library/pure/" target="_blank">
+              <input type="hidden" name="html" value="&lt;body ng-app=&quot;MyApp&quot;&gt;
+  &lt;basket apple orange&gt;Roll over me and check the console!&lt;/basket&gt;
+&lt;/body&gt;
+"></input>
+
+              <input type="hidden" name="js" value="var app = angular.module(&quot;MyApp&quot;, []);
+
+app.directive(&quot;basket&quot;, function() {
+  return {
+    restrict: &quot;E&quot;,
+    controller: function($scope, $element, $attrs) {
+      $scope.content = [];
+
+      this.addApple = function() {
+        $scope.content.push(&quot;apple&quot;);
+      };
+
+      this.addOrange = function() {
+        $scope.content.push(&quot;orange&quot;);
+      };
+    },
+    link: function(scope, element) {
+      element.bind(&quot;mouseenter&quot;, function() {
+        console.log(scope.content);
+      });
+    }
+  };
+});
+
+app.directive(&quot;apple&quot;, function() {
+  return {
+    require: &quot;basket&quot;,
+    link: function(scope, element, attrs, basketCtrl) {
+      basketCtrl.addApple();
+    }
+  };
+});
+
+app.directive(&quot;orange&quot;, function() {
+  return {
+    require: &quot;basket&quot;,
+    link: function(scope, element, attrs, basketCtrl) {
+      basketCtrl.addOrange();
+    }
+  };
+});"></input>
+
+        
+              <input type="hidden" name="resources" value="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js,http://code.jquery.com/jquery-1.10.1.min.js,http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css"></input>
+
+        <button class="btn small btn-primary">Edit in jsfiddle</button>
+      </form>
+  
+</div>
+
+<h2>Directive-to-Directive Communication</h2>
+
+<h3 id="problem">Problem</h3>
+
+<p>You wish a directive to communicate with another directive and augment each other’s behavior using a well-defined interface (API).</p>
+
+<h3 id="solution">Solution</h3>
+
+<p>We implement a directive <code>basket</code> with a controller function and two other directive <code>orange</code> and <code>apple</code> which “require” this controller. Our example starts with an <code>apple</code> and <code>orange</code> directive used as attributes.</p>
+<div>
+  <pre data-line=''><code class='language-markup'>&lt;body ng-app=&quot;MyApp&quot;&gt;
+  &lt;basket apple orange&gt;Roll over me and check the console!&lt;/basket&gt;
+&lt;/body&gt;</code></pre>
+</div>
+<p>The <code>basket</code> directive manages an array to which one can add apples and oranges!</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>var app = angular.module(&quot;MyApp&quot;, []);
+
+app.directive(&quot;basket&quot;, function() {
+  return {
+    restrict: &quot;E&quot;,
+    controller: function($scope, $element, $attrs) {
+      $scope.content = [];
+
+      this.addApple = function() {
+        $scope.content.push(&quot;apple&quot;);
+      };
+
+      this.addOrange = function() {
+        $scope.content.push(&quot;orange&quot;);
+      };
+    },
+    link: function(scope, element) {
+      element.bind(&quot;mouseenter&quot;, function() {
+        console.log(scope.content);
+      });
+    }
+  };
+});</code></pre>
+</div>
+<p>And finally the apple and orange directives, which add themselves to the basket using the basket’s controller.</p>
+<div>
+  <pre data-line=''><code class='language-javascript'>app.directive(&quot;apple&quot;, function() {
+  return {
+    require: &quot;basket&quot;,
+    link: function(scope, element, attrs, basketCtrl) {
+      basketCtrl.addApple();
+    }
+  };
+});
+
+app.directive(&quot;orange&quot;, function() {
+  return {
+    require: &quot;basket&quot;,
+    link: function(scope, element, attrs, basketCtrl) {
+      basketCtrl.addOrange();
+    }
+  };
+});</code></pre>
+</div>
+<p>If you hover with the mouse over the rendered text the console should print and the basket’s content.</p>
+
+<h3 id="discussion">Discussion</h3>
+
+<p><code>Basket</code> is the example directive that demonstrates an API using the controller function, whereas the <code>apple</code> and <code>orange</code> directives augment the <code>basket</code> directive. They both define a dependency to the <code>basket</code> controller with the <code>require</code> attribute. The <code>link</code> function then gets <code>basketCtrl</code> injected.</p>
+
+<p>Note how the <code>basket</code> directive is defined as an HTML element and the <code>apple</code> and <code>orange</code> directives are defined as HTML attributes (the default for directives). This demonstrates the typical use case of a reusable component augmented by other directives.</p>
+
+<p>Now there might be other ways of passing data back and forth between directives - we have seen the different semantics of using the (isolated) context in directives in previous recipes - but what’s especially great about the controller is the clear API contract it lets you define.</p>
+
+<div class="panel radius similar-pages">
+  <h4>Similar Recipes</h4>
+  <ul>
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <li>
+          <a href="changing-the-dom-in-response-to-user-actions.html">Changing the DOM in response to user actions</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="directive-to-directive-communication.html">Directive-to-Directive Communication</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="enabling-disabling-dom-elements-conditionally.html">Enabling/Disabling DOM Elements Conditionally</a>
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          <a href="passing-configuration-params-using-html-attributes.html">Passing Configuration Params Using HTML Attributes</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="rendering-a-directives-dom-node-children.html">Rendering a Directive's DOM Node Children</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="rendering-an-html-snippet-in-a-directive.html">Rendering an HTML Snippet in a Directive</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="repeatedly-rendering-directives-dom-node-children.html">Repeatedly Rendering Directive's DOM Node Children</a>
+        </li>
+      
+    
+      
+        <li>
+          <a href="testing-directives.html">Testing Directives</a>
+        </li>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+
+      <footer class="row">
+        <div class="large-12 columns">
+          <hr>
+          <div class="row">
+            <div class="large-6 columns">
+              <p>
+                Maintained by <a href="http://fdietz.de">Frederik Dietz</a>
+              </p>
+            </div>
+
+            <div class="large-6 columns text-right">
+              <p>All content licensed with <a href="http://creativecommons.org/">Creative Commons</a></p>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      <script src="../assets/application-0baff5f0e43111ed2b7cbc8b8b523b9f.js"></script>
+      <script>
+        $(document).foundation();
+      </script>
+
+      <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-42557266-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+      </script>
+
+      <script type="text/javascript">
+        $(function() {
+          $('#search-query').lunrSearch({
+            indexUrl: '/recipes-with-angular-js/search.json',
+            results:  '#search-results',
+            entries:  '.entries',
+            template: '#search-results-template'
+          });
+        });
+      </script>
+    </body>
+</html>
