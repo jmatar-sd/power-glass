@@ -14,9 +14,9 @@ body{
 			height:	100%;
 			background:top left no-repeat;
 	background-color:	white;
-	background-image:url('../resources/images/background.jpg');
+	background-image:url('../resources/images/bg2.jpg');//2 is the choosen one #6
 
-	.top-bar{
+	/*.top-bar{
 		position:   fixed;
 		top:		22px;
 		left:		5.5%;
@@ -41,30 +41,38 @@ body{
 			color:	lighten($base-color, 89%);
 		}
 	}
-}
+}*/
 .main-content{
 		position:	 fixed;
-		top:		 133px;
-		bottom: 	 22px;
-		width:	 	 100%;
-		
+		top:		 1%;
+		bottom: 	 1%;
+		right:		 1%;
+		left:		 1%;
+		width:	 	 98%;
+		height:		 98%;
 
 		background-color:	$base-color;
-		z-indes:	22;
+		z-indes:	0;
+	@include  border-radius(2.2em);
+	
 }
 .sales-panel{
 	position: absolute;
-	left: 	  0%;
+	right: 	  0%;
 	top: 	  0;
 	width:	  60%;
 	height:   100%;
+	@include	glass-shadow;
+	@include	glass-color(rgba(255,255,255, .22));
+	@include  border-radius(0 2.2em 2.2em 0);
 }
 .tools-panel{
 	position: absolute;
-	right: 	  0%;
+	left: 	  0%;
 	top: 	  0;
 	width:	  40%;
 	height:   100%;
+
 }
 .footer{
 	position:	 fixed;

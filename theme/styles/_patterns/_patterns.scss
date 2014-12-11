@@ -1,9 +1,9 @@
 
 
 	@mixin glass-shadow{
-				-webkit-box-shadow:0 2px 2px #000, 0 1px 0 #fff inset;
-			-moz-box-shadow:0 2px 2px #000, 0 1px 0 #fff inset;
-			box-shadow:0 2px 2px #000, 0 1px 0 #fff inset;
+				-webkit-box-shadow:0 2px 2px darken($base-color, 22%), 0 1px 0 lighten($base-color, 22%) inset;
+			-moz-box-shadow:0 2px 2px darken($base-color, 22%), 0 1px 0 lighten($base-color, 22%) inset;
+			box-shadow:0 2px 2px darken($base-color, 22%), 0 1px 0 lighten($base-color, 22%) inset;
 	}
 	@mixin glass-color($color){
 			background-color:	lighten($color, .22);
@@ -17,6 +17,16 @@
 			-webkit-border-radius: $value;
 			-moz-border-radius: $value;
 			border-radius: $value;
+	}
+
+	@mixin	border-radius-custom($top-left, $bottom-right, $top-right, $bottom-left){
+			-moz-border-radius-topleft:		 $top-left;
+			-moz-border-radius-topright:	 $top-right;
+			-moz-border-radius-bottomleft:	 $bottom-left;
+			-moz-border-radius-bottomright:	 $bottom-right;
+			-webkit-border-radius: 			 $top-left $bottom-right $top-right $bottom-left;
+			-moz-border-radius: 			 $top-left $bottom-right $top-right $bottom-left;
+			border-radius: 				     $top-left $bottom-right $top-right $bottom-left;
 	}
 	//not ready yet for use 
 	@mixin box-shadow($left, $top, $right, $bottom, $color, $style){
