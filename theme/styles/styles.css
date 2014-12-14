@@ -1,5 +1,6 @@
 @import url(lib/semantic.css);
 @import url(icons/Helium/style.css);
+@import url(icons/ios7/flaticon.css);
 html {
   width: 100%;
   height: 100%; }
@@ -42,6 +43,10 @@ body {
   		}
   	}
   }*/ }
+  body table, body thead, body tr, body td {
+    background-color: transparent; }
+    body table > *, body thead > *, body tr > *, body td > * {
+      background-color: transparent; }
   body .main-content {
     position: fixed;
     top: 1%;
@@ -55,7 +60,7 @@ body {
     -webkit-border-radius: 2.2em;
     -moz-border-radius: 2.2em;
     border-radius: 2.2em; }
-  body .default-panel {
+  body .main-pane {
     position: absolute;
     right: 0%;
     top: 0;
@@ -68,7 +73,79 @@ body {
     -webkit-border-radius: 0 2.2em 2.2em 0;
     -moz-border-radius: 0 2.2em 2.2em 0;
     border-radius: 0 2.2em 2.2em 0; }
-  body .tools-panel {
+    body .main-pane > *:nth-child(1) {
+      -webkit-border-radius: 0 2.2em 2.2em 0;
+      -moz-border-radius: 0 2.2em 2.2em 0;
+      border-radius: 0 2.2em 2.2em 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      width: 100%;
+      height: 100%; }
+    body .main-pane .total-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      -webkit-border-radius: 0 0 2.2em 0;
+      -moz-border-radius: 0 0 2.2em 0;
+      border-radius: 0 0 2.2em 0;
+      width: 100%;
+      height: 89px;
+      display: inline-block; }
+      body .main-pane .total-container > * {
+        float: left; }
+      body .main-pane .total-container .total-screen, body .main-pane .total-container .total-confirm, body .main-pane .total-container .total-cancel {
+        height: 89px; }
+      body .main-pane .total-container .total-screen {
+        width: 60%;
+        background-color: rgba(222, 222, 222, 0.22);
+        display: inline-block; }
+        body .main-pane .total-container .total-screen > * {
+          float: left; }
+        body .main-pane .total-container .total-screen .total-text {
+          line-height: 89px;
+          font-size: 2.2em;
+          float: left;
+          margin-left: 8.9%; }
+        body .main-pane .total-container .total-screen .total-desc {
+          line-height: 89px;
+          font-size: .89em;
+          float: right;
+          margin-right: 2.2%; }
+      body .main-pane .total-container .total-confirm [class^="flaticon-"]:before, body .main-pane .total-container .total-confirm [class*=" flaticon-"]:before, body .main-pane .total-container .total-confirm [class^="flaticon-"]:after, body .main-pane .total-container .total-confirm [class*=" flaticon-"]:after, body .main-pane .total-container .total-cancel [class^="flaticon-"]:before, body .main-pane .total-container .total-cancel [class*=" flaticon-"]:before, body .main-pane .total-container .total-cancel [class^="flaticon-"]:after, body .main-pane .total-container .total-cancel [class*=" flaticon-"]:after {
+        font-size: 8.9em;
+        font-style: normal;
+        line-height: 89px; }
+      body .main-pane .total-container .total-confirm {
+        width: 20%;
+        background-color: #64d4f9;
+        color: black;
+        -webkit-border-radius: 0 0 2.2em 0;
+        -moz-border-radius: 0 0 2.2em 0;
+        border-radius: 0 0 2.2em 0; }
+      body .main-pane .total-container .total-cancel {
+        width: 20%;
+        background-color: #74a6c1;
+        color: black; }
+    body .main-pane #table-container {
+      width: 100%;
+      height: 100%; }
+    body .main-pane #sales-content {
+      width: 100%;
+      height: 100%; }
+    body .main-pane #thead {
+      background-color: transparent; }
+    body .main-pane .ui.table {
+      background-color: transparent;
+      color: white;
+      border: none; }
+    body .main-pane .ui.table tr td {
+      border: none; }
+    body .main-pane .ui.table.celled th, body .main-pane .ui.table.celled td {
+      border: none; }
+  body .tools-pane {
     position: absolute;
     left: 0%;
     top: 0;
@@ -77,10 +154,16 @@ body {
     -webkit-border-radius: 2.2em 0 0 2.2em;
     -moz-border-radius: 2.2em 0 0 2.2em;
     border-radius: 2.2em 0 0 2.2em; }
-  body .footer {
-    position: fixed;
-    bottom: 0;
-    height: 22px;
-    width: 89%; }
+    body .tools-pane > *:nth-child(1) {
+      -webkit-border-radius: 2.2em 0 0 2.2em;
+      -moz-border-radius: 2.2em 0 0 2.2em;
+      border-radius: 2.2em 0 0 2.2em;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      width: 100%;
+      height: 100%; }
 
 /*# sourceMappingURL=styles.css.map */

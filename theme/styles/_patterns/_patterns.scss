@@ -1,5 +1,5 @@
 
-
+	
 	@mixin glass-shadow{
 				-webkit-box-shadow:0 2px 2px darken($base-color, 22%), 0 1px 0 lighten($base-color, 22%) inset;
 			-moz-box-shadow:0 2px 2px darken($base-color, 22%), 0 1px 0 lighten($base-color, 22%) inset;
@@ -27,6 +27,16 @@
 			-webkit-border-radius: 			 $top-left $bottom-right $top-right $bottom-left;
 			-moz-border-radius: 			 $top-left $bottom-right $top-right $bottom-left;
 			border-radius: 				     $top-left $bottom-right $top-right $bottom-left;
+	}
+	//utils
+	@mixin	fillParentSpace($position){
+	position:	  $position;
+		top:	  0;
+		left:	  0;
+		bottom:	  0;
+		right:	  0;
+		width:	  100%;
+		height:   100%;
 	}
 	//not ready yet for use 
 	@mixin box-shadow($left, $top, $right, $bottom, $color, $style){
