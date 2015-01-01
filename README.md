@@ -58,7 +58,7 @@ Project Structure:
     index.html        // you know dude .. these is SPA so i have only one page do all ajax calling
 
     ============================================================================================
-    if you need any inforamtions Do not be shy here is my contact info if i'm n't offline
+    if you need any inforamtions Do not be shy here is my contact info if i'm n't online
     email:    mailto://jmatar-sd@hotmail.com
     website:  http://www.jmatar.com             // mmm will be today
     phone:    +249916386878.
