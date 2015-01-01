@@ -14,11 +14,11 @@ Front-end Point of sales system POS can, be a kick start for any project. angula
 what is Jeffy/Power Glass ?
 
     i belive, only one developer can't be jack of all trades. so for who looking for a modren front-end application
-( SPA ) single page application using powerfull tehqnologies like { angularJS -base frame work, BackboneJS to manage models,
-and  yes UnderscoreJS libarary, plus BlurJS Libarary to do some bluring effects cross borwser.
+    ( SPA ) single page application using powerfull tehqnologies like { angularJS -base frame work, BackboneJS to
+    manage models,
+    and  yes UnderscoreJS libarary, plus BlurJS Libarary to do some bluring effects cross borwser.
 
-Power Glass styling did with ( SASS - Syntaclly Awesome Style Sheet ) so you can do more than just coloring and margin components
-with css.
+Power Glass styled with ( SASS - Syntaclly Awesome Style Sheet ) so you can do more than just coloring and margin components with css.
 Notice that i'm n't going to build all everything actually i will but if needed will use SPARK Micro Framework, these awesome
 framework to do the back-end job for me.
 put rigth now enjoy & play with it.
@@ -55,24 +55,21 @@ Jeffy
 |           
 index.html        // you know dude .. these is SPA so i have only one page do all ajax calling
 
-===============================================================================================
-
-if you need any inforamtions Do not be shy here is my contact info if i'm n't offline
-
-email:    mailto://jmatar-sd@hotmail.com
-website:  http://www.jmatar.com             // mmm will be today
-phone:    +249916386878.
-home:     +249922856129.
-
-//and yes everything is free dont forget { git pull ->  commit ->  push again } because i want to see you code.
-thank you & enjoy.
-   
-  {__.__}
-  |^___^|
-____|.|____
-||       ||
-||       ||
-___________
-|   ||    |
-|   ||    |
-|   ||    | 
+    ============================================================================================
+    if you need any inforamtions Do not be shy here is my contact info if i'm n't offline
+    email:    mailto://jmatar-sd@hotmail.com
+    website:  http://www.jmatar.com             // mmm will be today
+    phone:    +249916386878.
+    home:     +249922856129. 
+    //and yes everything is free dont forget { git pull ->  commit ->  push again } because i want to see you code.
+    thank you & enjoy.
+    ============================================================================================
+       {__.__}
+       |^___^|
+     ____|.|____
+     ||       ||
+     ||       ||
+     ___________
+     |   ||    |
+     |   ||    |
+     |   ||    | 
