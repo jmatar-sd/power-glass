@@ -1,0 +1,93 @@
+
+@mixin body{
+	position: relative;
+	margin:0;padding:0;
+			color:#fff;
+			font-family:arial;
+			text-shadow:0 2px 2px #000;
+			width:	100%;
+			height:	100%;
+			background:top left no-repeat;
+	background-color:	white;
+	background-image:url('../resources/images/bg2.jpg');//2 is the choosen one #6
+	table,thead,tr,td{
+				background-color:	transparent;
+			&>*{
+				background-color:	transparent;	
+			}
+	}
+	/*.top-bar{
+		position:   fixed;
+		top:		22px;
+		left:		5.5%;
+		
+
+		@include	glass-shadow;
+		@include	glass-color($base-color);
+		@include	border-radius(22px);
+			width:	89%;
+			height:	89px;
+			line-height: 89px;
+			text-align:	 CENTER;
+			cursor:move;
+			z-indes:	100;
+	.icon{
+		line-height: 89px;
+		height:		 89px;
+		text-align:	 CENTER;
+		font-size:	4em;
+		margin-left: 5%;
+		&:hover{
+			color:	lighten($base-color, 89%);
+		}
+	}
+}*/
+.main-content{
+		position:	 fixed;
+		top:		 1%;
+		bottom: 	 1%;
+		right:		 1%;
+		left:		 1%;
+		width:	 	 98%;
+		height:		 98%;
+
+		background-color:	$base-color;
+		z-indes:	0;
+	@include  border-radius(2.2em);
+	
+}
+
+.main-pane{
+	$main-pane-border:	0 2.2em 2.2em 0;
+	position: absolute;
+	right: 	  0%;
+	top: 	  0;
+	width:	  $main-pane-width;
+	height:   $main-pane-height;
+	@include	glass-shadow;
+	@include	glass-color(rgba(255,255,255, .22));
+	@include  border-radius($main-pane-border);
+	&>*:#{nth-child(1)}{
+		@include  border-radius($main-pane-border);
+		@include  fillParentSpace(absolute);
+	}
+}
+
+.tools-pane{
+	$tools-pane-border:	2.2em 0 0 2.2em;
+	position: absolute;
+	left: 	  0%;
+	top: 	  0;
+	width:	  $tools-pane-width;
+	height:   $tools-pane-height;
+	@include  border-radius($tools-pane-border);
+	&>*:#{nth-child(1)}{
+		@include  border-radius($tools-pane-border);
+		@include  fillParentSpace(absolute);
+	}
+}
+
+
+
+//# [END]
+}

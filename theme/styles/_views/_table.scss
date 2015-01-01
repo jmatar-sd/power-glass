@@ -1,0 +1,41 @@
+@mixin table{
+	.total-container{
+	position:	absolute;
+	bottom: 	0;
+	left:		0;
+	@include  border-radius(0 0 2.2em 0);
+	width: 		100%;
+	height: 	89px;
+	display: 	inline-block;
+	&>*{float:		left;}
+	.total-screen,.total-confirm,.total-cancel{
+		height:89px;	
+	}
+	.total-screen{
+		width: 60%;
+		background-color: rgba(222, 222 ,222, .22);
+		display: 	inline-block;
+		&>*{float:		left;}
+		.total-text{line-height: 89px;font-size: 2.2em;float: left;margin-left: 8.9%;}
+		.total-desc{line-height: 89px;font-size: .89em;float: right; margin-right: 2.2%;}
+	}
+	.total-confirm,.total-cancel{
+		[class^="flaticon-"]:before, [class*=" flaticon-"]:before, [class^="flaticon-"]:after, [class*=" flaticon-"]:after {
+    		font-size: 8.9em;
+    		font-style: normal;
+    		line-height: 89px;
+		}
+	}
+	.total-confirm{
+		width: 20%;
+		background-color:  $light-blue;
+		color: black;
+		@include  border-radius(0 0 2.2em 0);
+	}
+	.total-cancel{
+		width: 20%;
+		background-color: $blue-and-grey;
+		color: black;
+	}	
+	}
+}

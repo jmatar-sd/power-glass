@@ -5,6 +5,57 @@ html {
   width: 100%;
   height: 100%; }
 
+#tools-pane #menubar, #tools-pane #control, #tools-pane #interactive-panel, #tools-pane #barcode {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 89px;
+  background-color: #f16767;
+  color: white; }
+#tools-pane #menubar {
+  top: 0;
+  text-align: CENTER;
+  z-index: 2;
+  -webkit-border-radius: 2.2em 0 0 0;
+  -moz-border-radius: 2.2em 0 0 0;
+  border-radius: 2.2em 0 0 0; }
+  #tools-pane #menubar [class^="flaticon-"]:before, #tools-pane #menubar [class*=" flaticon-"]:before, #tools-pane #menubar [class^="flaticon-"]:after, #tools-pane #menubar [class*=" flaticon-"]:after {
+    font-size: 6.9em;
+    font-style: normal;
+    line-height: 89px; }
+#tools-pane #control {
+  top: 90px;
+  line-height: 89px;
+  font-size: 4.4em;
+  z-index: 2; }
+  #tools-pane #control > * {
+    margin-left: 5%;
+    color: black; }
+#tools-pane #interactive-panel {
+  top: 180px;
+  font-size: 4.4em;
+  height: 267px;
+  z-index: 1;
+  background-color: #f8c761;
+  color: black; }
+  #tools-pane #interactive-panel #calc {
+    display: inline-block; }
+    #tools-pane #interactive-panel #calc .line > * {
+      float: left; }
+    #tools-pane #interactive-panel #calc .line .num {
+      width: 24.5%;
+      height: 24.5%;
+      margin: 5; }
+#tools-pane #barcode {
+  bottom: 0;
+  left: 0;
+  height: 40%;
+  background-color: #64d4f9;
+  color: black;
+  -webkit-border-radius: 0 0 0 2.2em;
+  -moz-border-radius: 0 0 0 2.2em;
+  border-radius: 0 0 0 2.2em; }
+
 body {
   position: relative;
   margin: 0;
@@ -16,33 +67,7 @@ body {
   height: 100%;
   background: top left no-repeat;
   background-color: white;
-  background-image: url("../resources/images/bg2.jpg");
-  	/*.top-bar{
-  		position:   fixed;
-  		top:		22px;
-  		left:		5.5%;
-  		
-  
-  		@include	glass-shadow;
-  		@include	glass-color($base-color);
-  		@include	border-radius(22px);
-  			width:	89%;
-  			height:	89px;
-  			line-height: 89px;
-  			text-align:	 CENTER;
-  			cursor:move;
-  			z-indes:	100;
-  	.icon{
-  		line-height: 89px;
-  		height:		 89px;
-  		text-align:	 CENTER;
-  		font-size:	4em;
-  		margin-left: 5%;
-  		&:hover{
-  			color:	lighten($base-color, 89%);
-  		}
-  	}
-  }*/ }
+  background-image: url("../resources/images/bg2.jpg"); }
   body table, body thead, body tr, body td {
     background-color: transparent; }
     body table > *, body thead > *, body tr > *, body td > * {
