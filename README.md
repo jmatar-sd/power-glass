@@ -63,7 +63,7 @@ Project Structure:
     website:  http://www.jmatar.com             // mmm will be today
     phone:    +249916386878.
     home:     +249922856129. 
-    //and yes everything is free dont forget { git pull ->  commit ->  push again } because i want to see you code.
+    //and yes everything is free dont forget { git pull ->  commit ->  push again } because i want to see your code.
     thank you & enjoy.
     ============================================================================================
         		{__.__}
