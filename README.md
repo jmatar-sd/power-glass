@@ -1,10 +1,10 @@
-        Product Name: Jeffy
-        Project Name:	Power Glass.
-	Developer:		Mohammed Matar.
+        Product Name: 		  Jeffy
+        Project Name:		  Power Glass.
+	Developer:		  Mohammed Matar.
 	Email:			  mailTo://jmatar-sd@hotmail.com.
 	website:		  http://www.jmatar.com.
 	License:		  Apatche 2.0 { simply you can do anything u want with me Dude !}.
-	Publish Date:	2015-01-01.
+	Publish Date:	          2015-01-01.
 	============================================================================================
 summary:
 
